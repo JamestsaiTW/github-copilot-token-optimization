@@ -234,6 +234,34 @@ Treat the suggestions like a code review — not all are worth adopting, but the
 
 All session data lives locally in `~/.copilot/session-state/` and on your machine only. This is **Copilot CLI session data**, not a general Copilot Chat history store. Standard model interactions still apply when you run a `/chronicle` command (the data is sent to the model to generate the summary), but nothing is uploaded for storage.
 
+## 2.5.8 VS Code Usage Analytics: AI Engineering Coach
+
+[`/chronicle`](#257-close-the-loop-with-chronicle) covers Copilot CLI sessions. For VS Code usage, [**AI Engineering Coach**](https://github.com/microsoft/AI-Engineering-Coach) is the counterpart — a local VS Code extension that reads your VS Code AI session logs and surfaces the same class of insight: anti-patterns, token patterns, context health, and skill discovery.
+
+> **Privacy:** All analysis runs locally. No data leaves your machine. The extension is read-only — it never modifies your session files. Optional AI features (rule compiler, context review) use the VS Code built-in Copilot model API only when you explicitly invoke them.
+
+Key capabilities relevant to token efficiency:
+
+| Feature | What it surfaces |
+|---------|-----------------|
+| **Anti-Patterns** | 45 editable rules across prompt quality, session hygiene, code review, tool mastery, and context management — with severity ratings and concrete fix actions |
+| **Context Health** | Agentic readiness checklist, workspace context map, and instruction-file audit |
+| **Skill Finder** | Detects repeated prompt patterns in your history and matches them to reusable skills from the open-source catalog |
+| **Output / Burndown** | AI-generated code volume by language and model; token budget progress with projections |
+
+**Quick start:**
+
+```bash
+git clone https://github.com/microsoft/ai-engineering-coach.git
+cd ai-engineering-coach
+npm install && npm run package
+code --install-extension ai-engineer-coach-*.vsix
+```
+
+Then `Cmd+Shift+P` → **AI Engineer Coach: Open Dashboard**.
+
+**How it complements `/chronicle`:** `/chronicle` acts on CLI session history to generate instruction fixes. AI Engineering Coach acts on VS Code session history to score your practice and flag structural issues (context bloat, unused MCPs, instruction-file gaps). Use both: chronicle to patch recurring prompt failures; AI Engineering Coach to audit the broader VS Code setup and track trend lines.
+
 ---
 
 **Next:** [The AGENTS.md Problem →](07-agents-md-problem.md)

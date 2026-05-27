@@ -426,15 +426,15 @@ Relevant settings that affect agent token usage:
 
 ```json
 {
-  // Limit maximum agent steps (default varies by model)
-  "github.copilot.chat.agent.maxTurns": 10,
+  // Maximum number of requests the agent can make (default: 25)
+  "chat.agent.maxRequests": 10,
 
   // Use auto model selection — cheaper models for simple sub-tasks
   "github.copilot.chat.agent.model": "auto"
 }
 ```
 
-**`maxTurns`** caps how many steps the agent takes. Lower = fewer tokens, but the agent might not finish complex tasks. Start at 10-15, increase only when needed.
+**`maxRequests`** caps how many tool-call requests the agent can make. Lower = fewer tokens, but the agent might not finish complex tasks. Start at 10-15, increase only when needed.
 
 ### 4.5.5 Custom Instructions for Agent Efficiency
 

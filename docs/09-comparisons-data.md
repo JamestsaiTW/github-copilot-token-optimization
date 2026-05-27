@@ -108,7 +108,7 @@ The complete comparison of every technique covered in this guide:
 | **Agent Mode Configuration** |
 | K1 | Precise prompts + acceptance criteria | 30-60% | — | Improves | Low | Agent tasks |
 | K2 | Plan files for complex tasks | 15-40% | — | Improves | Medium | Multi-step agent tasks |
-| K3 | Cap agent maxTurns | Variable | — | Risk truncation | Low | All agent tasks |
+| K3 | Cap agent maxRequests | Variable | — | Risk truncation | Low | All agent tasks |
 | K4 | Mode selection (Ask/Edit/Agent) | 60-90% | — | Good | Low | Every interaction |
 
 > †A1/A2 output savings require system-level terse output instructions (see B5). Writing terse prompts alone saves input tokens; output tokens are only reduced if the model is instructed to respond tersely.
