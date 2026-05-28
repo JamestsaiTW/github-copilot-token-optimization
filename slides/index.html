@@ -1,0 +1,1793 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot Token Optimization - 8 Hour Workshop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
+    <style>
+      :root {
+        --r-main-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --r-heading-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --r-link-color: #58a6ff;
+        --r-selection-background-color: #238636;
+      }
+
+      .reveal {
+        font-size: 34px;
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        text-transform: none;
+        letter-spacing: -0.03em;
+      }
+
+      .reveal h1 {
+        font-size: 2.2em;
+      }
+
+      .reveal h2 {
+        font-size: 1.65em;
+      }
+
+      .reveal h3 {
+        font-size: 1.25em;
+      }
+
+      .reveal p,
+      .reveal li,
+      .reveal td,
+      .reveal th {
+        line-height: 1.24;
+      }
+
+      .reveal ul,
+      .reveal ol {
+        width: 88%;
+      }
+
+      .reveal table {
+        font-size: 0.58em;
+        margin-top: 0.6em;
+      }
+
+      .reveal pre {
+        width: 96%;
+        font-size: 0.58em;
+        box-shadow: none;
+      }
+
+      .reveal code {
+        background: rgba(110, 118, 129, 0.22);
+        border-radius: 0.18em;
+        padding: 0.06em 0.18em;
+      }
+
+      .reveal pre code {
+        background: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 10px;
+        padding: 1em;
+      }
+
+      .kicker {
+        color: #7ee787;
+        font-size: 0.62em;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .muted {
+        color: #8b949e;
+      }
+
+      .small {
+        font-size: 0.68em;
+      }
+
+      .tiny {
+        font-size: 0.52em;
+      }
+
+      .accent {
+        color: #7ee787;
+      }
+
+      .warning {
+        color: #ffa657;
+      }
+
+      .danger {
+        color: #ff7b72;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65em;
+        align-items: stretch;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.55em;
+      }
+
+      .card {
+        background: rgba(22, 27, 34, 0.92);
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        padding: 0.75em;
+        text-align: left;
+      }
+
+      .card h3,
+      .card h4 {
+        margin: 0 0 0.35em 0;
+      }
+
+      .card p,
+      .card li {
+        font-size: 0.72em;
+      }
+
+      .lab {
+        border-left: 8px solid #7ee787;
+      }
+
+      .enterprise {
+        border-left: 8px solid #58a6ff;
+      }
+
+      .checkpoint {
+        border-left: 8px solid #ffa657;
+      }
+
+      .quote {
+        font-size: 1.05em;
+        color: #c9d1d9;
+        border-left: 8px solid #7ee787;
+        padding-left: 0.8em;
+        text-align: left;
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8em;
+        align-items: start;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .left {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <p class="kicker">8 hour customer workshop</p>
+          <h1>GitHub Copilot Token Optimization</h1>
+          <p>Spend fewer tokens. Keep quality. Build enterprise guardrails.</p>
+          <p class="small muted">Reveal.js deck generated from repository guide content.</p>
+          <aside class="notes">
+            Open with disclaimer: community guide, not official GitHub or Microsoft guidance. Use official docs for supported controls.
+          </aside>
+        </section>
+
+        <section>
+          <h2>Workshop outcome</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Explain cost</h3>
+              <p>Input, output, cached tokens, agent loops, MCP schemas, model routing.</p>
+            </div>
+            <div class="card">
+              <h3>Change behavior</h3>
+              <p>Prompt compression, output control, context hygiene, Ask/Edit/Agent routing.</p>
+            </div>
+            <div class="card">
+              <h3>Ship rollout plan</h3>
+              <p>Enterprise budgets, model policy, instruction scope, monthly review loop.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Important framing</h2>
+          <div class="quote">
+            This deck is based on field guidance in this repo. It is not official GitHub or Microsoft guidance.
+          </div>
+          <p class="small">Use <code>docs.github.com/copilot</code> for supported feature behavior, billing controls, and admin policy.</p>
+        </section>
+
+        <section>
+          <h2>8 hour agenda</h2>
+          <table>
+            <thead>
+              <tr><th>Time</th><th>Block</th><th>Output</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>00:00-00:30</td><td>Why tokens matter + fast wins</td><td>Shared cost model</td></tr>
+              <tr><td>00:30-02:00</td><td>Prompt, language, output labs</td><td>Terse prompt templates</td></tr>
+              <tr><td>02:00-03:15</td><td>Context + always-on files</td><td>Instruction pruning diff</td></tr>
+              <tr><td>03:15-04:15</td><td>Workflow + modes</td><td>Mode routing cheat sheet</td></tr>
+              <tr><td>04:15-05:15</td><td>MCP/tool costs + data</td><td>MCP audit list</td></tr>
+              <tr><td>05:15-06:15</td><td>Practical setup</td><td>Repo setup checklist</td></tr>
+              <tr><td>06:15-07:30</td><td>Model/pricing + governance</td><td>Customer admin rollout</td></tr>
+              <tr><td>07:30-08:00</td><td>Capstone</td><td>30 day token plan</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Navigation</h2>
+          <p>Horizontal = chapters. Vertical = chapter slides + labs.</p>
+          <p class="small muted">Press <code>Esc</code> for overview. Press <code>S</code> for speaker notes.</p>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Quick Start</p>
+            <h2>11 things to do right now</h2>
+            <p>Start with output, then shrink structural input, then route models and tools.</p>
+          </section>
+
+          <section>
+            <h2>Fastest wins</h2>
+            <ol>
+              <li><strong>Code-only responses</strong>: highest per-token ROI.</li>
+              <li><strong>Constrain format</strong>: bullets, one sentence, JSON, tables.</li>
+              <li><strong>Shrink always-on context</strong>: instructions and agent files.</li>
+              <li><strong>Use Auto by default</strong>: pin premium only when justified.</li>
+              <li><strong>Use Ask Mode</strong> for simple questions.</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>More fast wins</h2>
+            <ol start="6">
+              <li><strong>Scope context with <code>applyTo</code></strong>.</li>
+              <li><strong>Write precise prompts</strong>: target file, function, done condition.</li>
+              <li><strong>Retune prompts to target model</strong>.</li>
+              <li><strong>Audit MCP servers</strong>.</li>
+              <li><strong>Run <code>/chronicle improve</code></strong> in Copilot CLI.</li>
+              <li><strong>Try CodeAct</strong> for long CLI tool chains.</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>The priority stack</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>Output first</h3>
+                <p>Verbose answers are expensive. One default instruction changes every response.</p>
+              </div>
+              <div class="card">
+                <h3>Always-on second</h3>
+                <p>Instruction files and tool schemas load repeatedly. Small baselines compound.</p>
+              </div>
+              <div class="card">
+                <h3>Mode third</h3>
+                <p>Ask for questions. Edit for single-file changes. Agent for multi-step work.</p>
+              </div>
+              <div class="card">
+                <h3>Governance fourth</h3>
+                <p>Budgets cap spend. Model policy limits expensive lanes.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 0: baseline your habits</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Identify your top 3 token leaks before learning techniques.</p>
+              <p><strong>Do:</strong> mark each as green/yellow/red: output verbosity, instruction size, open tabs, Agent use, MCP count, model pinning, long chat history.</p>
+              <p><strong>Deliverable:</strong> personal baseline + one "fix today" action.</p>
+              <p><strong>Time:</strong> 10 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 1</p>
+            <h2>Why tokens matter</h2>
+            <p>Tokens drive cost, speed, limits, and context capacity.</p>
+          </section>
+
+          <section>
+            <h2>Tokens are subwords</h2>
+            <div class="two-col">
+              <div class="card">
+                <h3>BPE behavior</h3>
+                <ul>
+                  <li>Common words can be one token.</li>
+                  <li>Rare words split into pieces.</li>
+                  <li>Punctuation and filler still count.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Core insight</h3>
+                <p><code>Sure, I'd be happy to help!</code> can burn around 10 tokens of zero technical value.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Cost model</h2>
+            <table>
+              <thead><tr><th>Bucket</th><th>What it contains</th><th>Lever</th></tr></thead>
+              <tbody>
+                <tr><td>Input</td><td>Prompt, context, files, history, tools</td><td>Scope and compress</td></tr>
+                <tr><td>Cached</td><td>Stable reused prefixes</td><td>Keep stable context stable</td></tr>
+                <tr><td>Output</td><td>Model response</td><td>Code-only, concise format</td></tr>
+              </tbody>
+            </table>
+            <p class="small warning">Output tokens usually cost materially more than input tokens in vendor pricing examples.</p>
+          </section>
+
+          <section>
+            <h2>Input is bigger than your prompt</h2>
+            <pre><code class="language-text">Context window
+├─ System prompt
+├─ copilot-instructions.md / AGENTS.md
+├─ File context and open tabs
+├─ Conversation history
+├─ MCP tool schemas
+└─ Your typed prompt</code></pre>
+            <p class="small">Your 20-word prompt can ride inside thousands of hidden tokens.</p>
+          </section>
+
+          <section>
+            <h2>Coding Agent multiplier</h2>
+            <p>One issue-to-PR run is not one request.</p>
+            <div class="grid">
+              <div class="card">
+                <h3>Agent steps</h3>
+                <p>Plan, search, read files, edit, run tests, inspect failures, retry.</p>
+              </div>
+              <div class="card">
+                <h3>Compounding</h3>
+                <p>Every step reloads baseline context and adds previous tool results.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 1: token anatomy</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Separate visible prompt from hidden context.</p>
+              <p><strong>Do:</strong> choose one recent Copilot task. List likely context sources: open files, referenced files, instructions, history, tools, output.</p>
+              <p><strong>Discuss:</strong> which source was most controllable?</p>
+              <p><strong>Time:</strong> 15 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.1</p>
+            <h2>Prompt compression</h2>
+            <p>Say same thing in fewer tokens. Preserve technical precision.</p>
+          </section>
+
+          <section>
+            <h2>Caveman pattern</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>Drop</h3>
+                <p>Articles, filler, pleasantries, hedging, softeners.</p>
+              </div>
+              <div class="card">
+                <h3>Keep</h3>
+                <p>Technical terms, code, filenames, constraints, exact done condition.</p>
+              </div>
+            </div>
+            <p class="accent"><code>[thing] [action] [reason]. [next step].</code></p>
+          </section>
+
+          <section>
+            <h2>Before vs after</h2>
+            <table>
+              <thead><tr><th>Verbose</th><th>Caveman</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Could you please review this pull request and let me know if there are any issues?</td>
+                  <td><code>Review PR. Flag issues.</code></td>
+                </tr>
+                <tr>
+                  <td>Can you explain what this error message means and how I should fix it?</td>
+                  <td><code>Explain error. How fix.</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Compression levels</h2>
+            <table>
+              <thead><tr><th>Level</th><th>Style</th><th>Use when</th></tr></thead>
+              <tbody>
+                <tr><td>Lite</td><td>Professional but tight</td><td>Client-facing, onboarding</td></tr>
+                <tr><td>Full</td><td>Fragments, no fluff</td><td>Daily developer prompts</td></tr>
+                <tr><td>Ultra</td><td>Abbrev, arrows, terse</td><td>High-volume, known domain</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Structured beats prose</h2>
+            <pre><code class="language-text">POST /api/users
+Validate:
+- name: string, required
+- email: string, required, valid
+400 on validation fail
+201 on success, return created user
+Save to DB</code></pre>
+            <p class="small">Bullets and key-value pairs force clarity and reduce filler.</p>
+          </section>
+
+          <section>
+            <h2>Code-centric prompting</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>Natural language</h3>
+                <p>Create a function that takes numbers, filters negative values, doubles remaining values, returns sum.</p>
+              </div>
+              <div class="card">
+                <h3>Code-centric</h3>
+                <p><code>fn(nums) -> filter(&gt;0) -> map(*2) -> sum</code></p>
+                <p><code>Like getUserById but for emails. 404 if missing.</code></p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Guardrails as invariants</h2>
+            <table>
+              <thead><tr><th>Verbose procedure</th><th>Compressed invariant</th></tr></thead>
+              <tbody>
+                <tr><td>Make sure every SQL query parameterizes values...</td><td><code>SQL: parameterized queries only. No concatenation.</code></td></tr>
+                <tr><td>Please write tests for any new code...</td><td><code>New code -> tests. Cover happy + error.</code></td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Lab 2: prompt compression ladder</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Rewrite one real prompt three ways: lite, full, ultra.</p>
+              <p><strong>Do:</strong> preserve file names, line numbers, constraints, done condition. Drop only fluff.</p>
+              <p><strong>Compare:</strong> which version is shortest without adding ambiguity?</p>
+              <p><strong>Time:</strong> 20 minutes.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 3: prompt A/B</h2>
+            <div class="card lab">
+              <h3>Try this vs that</h3>
+              <pre><code class="language-text">A: Could you take a look at auth and improve error handling?
+
+B: File: src/auth/login.ts.
+Bug: null user causes .email crash.
+Fix: null guard before .email.
+Test: add null-user case.
+Done: targeted test passes.</code></pre>
+              <p><strong>Run:</strong> ask Copilot with A, then B. Compare file reads, clarifications, output length.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.2</p>
+            <h2>Language comparison</h2>
+            <p>English is usually most token-efficient for prompts.</p>
+          </section>
+
+          <section>
+            <h2>CJK assumption fails</h2>
+            <table>
+              <thead><tr><th>Language</th><th>Sentence</th><th>Tokens</th><th>vs English</th></tr></thead>
+              <tbody>
+                <tr><td>English</td><td>I met a huge dog</td><td>5</td><td>1.0x</td></tr>
+                <tr><td>Spanish</td><td>Conoci a un perro enorme</td><td>8</td><td>1.6x</td></tr>
+                <tr><td>Chinese</td><td>Chinese equivalent</td><td>11</td><td>2.2x</td></tr>
+                <tr><td>Japanese</td><td>Japanese equivalent</td><td>11</td><td>2.2x</td></tr>
+                <tr><td>Russian</td><td>Russian equivalent</td><td>14</td><td>2.8x</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Why</h2>
+            <ul>
+              <li>BPE tokenizers are trained heavily on English.</li>
+              <li>Common English words often get one token.</li>
+              <li>CJK text has fewer characters, but more tokens per character.</li>
+              <li>Non-Latin scripts often cost more; transliteration can help.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Practical rule</h2>
+            <div class="quote">
+              Use terse English for prompts and instructions. Do not translate to CJK to save tokens.
+            </div>
+            <p class="small">If a user writes better in native language, quality can outweigh token cost. For optimization, English wins.</p>
+          </section>
+
+          <section>
+            <h2>Lab 4: tokenizer reality check</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Disprove or confirm language assumptions with actual token counts.</p>
+              <p><strong>Do:</strong> pick one prompt. Translate to your strongest non-English language. Compare token counts in tokenizer tool.</p>
+              <p><strong>Deliverable:</strong> team language guidance: when English is required, when native language is OK.</p>
+              <p><strong>Time:</strong> 20 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.3</p>
+            <h2>Context management</h2>
+            <p>Control what gets sent. Biggest input wins are structural.</p>
+          </section>
+
+          <section>
+            <h2>Always-on files cost every turn</h2>
+            <p><code>.github/copilot-instructions.md</code>, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, and similar files can become persistent context.</p>
+            <p class="small warning">Duplicate content can be paid twice when multiple files are loaded by different tools.</p>
+          </section>
+
+          <section>
+            <h2>Instruction compression example</h2>
+            <pre><code class="language-text">Terse like caveman. Technical substance exact. Only fluff die.
+Drop: articles, filler (just/really/basically), pleasantries, hedging.
+Fragments OK. Short synonyms. Code unchanged.
+Pattern: [thing] [action] [reason]. [next step].</code></pre>
+            <p class="small">Around 50 tokens. Loaded on every interaction.</p>
+          </section>
+
+          <section>
+            <h2>Context hygiene</h2>
+            <ul>
+              <li>Close files not relevant to current task.</li>
+              <li>Keep files focused and small.</li>
+              <li>Ignore build output, vendor dirs, generated files.</li>
+              <li>Use Content Exclusion for sensitive paths in Business/Enterprise.</li>
+              <li>Start fresh conversations after topic changes.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Use scoped instructions</h2>
+            <pre><code class="language-markdown">---
+applyTo: "src/api/**/*.ts"
+---
+API conventions:
+- Routes in src/api/routes/. Handlers thin, logic in services/.
+- Validate with zod.
+- Errors via Result&lt;T,E&gt;, never throw.</code></pre>
+            <p class="small">Pay path-specific guidance only when relevant files are in scope.</p>
+          </section>
+
+          <section>
+            <h2>Always-on vs conditional vs on-demand</h2>
+            <table>
+              <thead><tr><th>Scope</th><th>Use for</th><th>Token posture</th></tr></thead>
+              <tbody>
+                <tr><td>Always-on</td><td>Universal rules</td><td>Keep tiny</td></tr>
+                <tr><td>Conditional</td><td>Path/layer rules</td><td><code>applyTo</code></td></tr>
+                <tr><td>On-demand</td><td>Review checklists, release notes</td><td>Load only when invoked</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Cache-friendly behavior</h2>
+            <ul>
+              <li>Keep stable context at the top.</li>
+              <li>Do not churn instruction files constantly.</li>
+              <li>Reuse saved snippets instead of re-pasting large context.</li>
+              <li>Summarize and restart when history gets stale.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Enterprise note: Content Exclusion</h2>
+            <div class="card enterprise">
+              <h3>Customer-side action</h3>
+              <p>Configure Content Exclusion for sensitive files, generated bundles, large data files, and regulated paths.</p>
+              <p><strong>Important:</strong> treat this as privacy/policy control first, token-saving side effect second. Check current surface support in official docs.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 5: context audit</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Find always-on context that should become scoped or on-demand.</p>
+              <p><strong>Do:</strong> inspect repo instructions, AGENTS/CLAUDE files, open tabs, generated files, MCP config.</p>
+              <p><strong>Deliverable:</strong> three-column list: keep always-on, move to <code>applyTo</code>, move on-demand/delete.</p>
+              <p><strong>Time:</strong> 30 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.4</p>
+            <h2>Output control</h2>
+            <p>Tell model what not to say. Highest per-token ROI.</p>
+          </section>
+
+          <section>
+            <h2>Default line</h2>
+            <pre><code class="language-text">Code only, no explanation.</code></pre>
+            <p>Best for generation tasks when team already understands desired change.</p>
+          </section>
+
+          <section>
+            <h2>Format constraints</h2>
+            <table>
+              <thead><tr><th>Instruction</th><th>Use when</th></tr></thead>
+              <tbody>
+                <tr><td>Answer in one sentence</td><td>Quick decision or explanation</td></tr>
+                <tr><td>3 bullets max</td><td>Scan-friendly summary</td></tr>
+                <tr><td>Reply as JSON</td><td>Machine-readable extraction</td></tr>
+                <tr><td>Yes/no, then one line why</td><td>Review gate</td></tr>
+                <tr><td>Diff only</td><td>Patch inspection</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Project default</h2>
+            <pre><code class="language-text">Be concise. No explanations unless asked.
+Code only for generation tasks.
+Bullets over paragraphs.</code></pre>
+            <p class="small">Override when learning, debugging, or teaching: ask for explanation explicitly.</p>
+          </section>
+
+          <section>
+            <h2>Lab 6: output A/B</h2>
+            <div class="card lab">
+              <h3>Try this vs that</h3>
+              <pre><code class="language-text">A: Add input validation to processOrder().
+
+B: Add input validation to processOrder().
+Code only. No explanation. Minimal diff.</code></pre>
+              <p><strong>Measure:</strong> response length, explanation tokens, diff usefulness.</p>
+              <p><strong>Time:</strong> 15 minutes.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 7: format forcing</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Practice asking for bounded output.</p>
+              <p><strong>Prompts:</strong> "3 bullets max", "table only", "JSON only", "one-line verdict + risk".</p>
+              <p><strong>Deliverable:</strong> team snippet library for common Copilot outputs.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.5</p>
+            <h2>Workflow optimization</h2>
+            <p>Use cheaper interaction shapes before optimizing words.</p>
+          </section>
+
+          <section>
+            <h2>Commit and PR text matter</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>Commit</h3>
+                <p><code>feat: add password reset via settings page</code></p>
+                <p>Body only when "why" is not obvious.</p>
+              </div>
+              <div class="card">
+                <h3>Review</h3>
+                <p><code>L42: bug: user can be null. Add guard before .email.</code></p>
+                <p>One-line, actionable, severity-coded.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Ask vs Edit vs Agent</h2>
+            <table>
+              <thead><tr><th>Task</th><th>Mode</th><th>Reason</th></tr></thead>
+              <tbody>
+                <tr><td>What does function do?</td><td>Ask</td><td>One call</td></tr>
+                <tr><td>Syntax question</td><td>Ask</td><td>No tools</td></tr>
+                <tr><td>Single-file tweak</td><td>Edit</td><td>Targeted</td></tr>
+                <tr><td>Multi-file refactor</td><td>Agent</td><td>Needs tools</td></tr>
+                <tr><td>Issue-to-PR</td><td>Coding Agent</td><td>Autonomous workflow</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Auto model default</h2>
+            <p>Auto is a good baseline: supported Auto pool, org policy-aware, discount on eligible paid-plan Chat usage per docs.</p>
+            <p class="warning">Auto does not mean "escalate into every premium model." Pin premium deliberately.</p>
+          </section>
+
+          <section>
+            <h2>Retune prompts when model changes</h2>
+            <pre><code class="language-text">Target model: GPT-5.5.
+Guide: &lt;official prompting guide URL&gt;
+Files: .github/copilot-instructions.md, .github/instructions/*.md
+Adapt prompts to guide. Preserve behavior. Reduce rework.
+Show diff only.</code></pre>
+          </section>
+
+          <section>
+            <h2>When not to compress</h2>
+            <ul>
+              <li>Security warnings.</li>
+              <li>Irreversible operations.</li>
+              <li>Onboarding and teaching.</li>
+              <li>Regulatory/compliance language.</li>
+              <li>Complex instructions where fragments add ambiguity.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Close loop with usage coaching</h2>
+            <div class="grid">
+              <div class="card">
+                <h3><code>/chronicle</code></h3>
+                <p>Copilot CLI session history. Use <code>/chronicle improve</code> for recurring confusion.</p>
+              </div>
+              <div class="card">
+                <h3>AI Engineering Coach</h3>
+                <p>VS Code local extension. Finds anti-patterns, context health, skill opportunities.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 8: mode routing drill</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Stop using Agent Mode for one-shot work.</p>
+              <p><strong>Do:</strong> classify 20 sample tasks as Ask/Edit/Agent/Coding Agent. Defend choice.</p>
+              <p><strong>Deliverable:</strong> team mode-routing cheat sheet.</p>
+              <p><strong>Time:</strong> 20 minutes.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 9: model routing drill</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Prevent expensive-model pinning by default.</p>
+              <p><strong>Do:</strong> map tasks to Auto, included/lower-cost, standard, premium. Include reasoning-effort choice if available.</p>
+              <p><strong>Deliverable:</strong> model escalation rules.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.6</p>
+            <h2>Always-on context problem</h2>
+            <p>More context can make agents worse and cost more.</p>
+          </section>
+
+          <section>
+            <h2>Research signal</h2>
+            <table>
+              <thead><tr><th>Finding</th><th>Observed impact</th></tr></thead>
+              <tbody>
+                <tr><td>LLM-generated context files</td><td>Hurt in 5/8 settings</td></tr>
+                <tr><td>Average correctness</td><td>Down about 2%</td></tr>
+                <tr><td>Token cost</td><td>Up 20-23%</td></tr>
+                <tr><td>Reasoning overhead</td><td>Up about 22% in cited setup</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Why context hurts</h2>
+            <div class="grid">
+              <div class="card"><h3>Redundancy tax</h3><p>Repeats facts agent can discover.</p></div>
+              <div class="card"><h3>Attention tax</h3><p>Important rules get lost in middle.</p></div>
+              <div class="card"><h3>Anchoring trap</h3><p>Outdated tool guidance over-influences agent.</p></div>
+              <div class="card"><h3>Signal/noise</h3><p>Routine facts dilute landmines.</p></div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Keep landmines only</h2>
+            <table>
+              <thead><tr><th>Keep</th><th>Delete</th></tr></thead>
+              <tbody>
+                <tr><td>Use <code>uv</code> instead of <code>pip</code></td><td>This is a Python project</td></tr>
+                <tr><td>DB migrations must run in order</td><td>We use PostgreSQL</td></tr>
+                <tr><td>Do not refactor auth module; audit pending</td><td>We use JWT auth</td></tr>
+                <tr><td>Deploy requires VPN</td><td>Main branch protected</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Bug tracker model</h2>
+            <pre><code class="language-text">Start almost empty.
+Agent trips on something -> add one line.
+Root cause fixed -> delete that line.</code></pre>
+            <p>Instruction files should grow and shrink, not accumulate like a wiki.</p>
+          </section>
+
+          <section>
+            <h2>Lab 10: landmine pruning</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Cut context without losing correctness.</p>
+              <p><strong>Do:</strong> mark each instruction as discoverable, style, landmine, stale, duplicate. Delete or scope everything except true always-on landmines.</p>
+              <p><strong>Deliverable:</strong> 10-line max instruction file draft.</p>
+              <p><strong>Time:</strong> 35 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 2.7</p>
+            <h2>MCP and tool costs</h2>
+            <p>Tool schemas are hidden token tax.</p>
+          </section>
+
+          <section>
+            <h2>Measure first</h2>
+            <pre><code class="language-text">/context
+
+System/Tools: MCPs + instructions + system prompt
+Messages: conversation history
+Free Space: remaining context</code></pre>
+            <p class="small">In VS Code, estimate active MCP servers x tools x about 200 tokens/tool.</p>
+          </section>
+
+          <section>
+            <h2>Every tool costs tokens</h2>
+            <table>
+              <thead><tr><th>Component</th><th>Approx cost</th></tr></thead>
+              <tbody>
+                <tr><td>Name + description</td><td>20-50 tokens</td></tr>
+                <tr><td>Simple parameter schema</td><td>30-80 tokens</td></tr>
+                <tr><td>Complex parameter schema</td><td>100-300 tokens</td></tr>
+                <tr><td>Total per tool</td><td>100-500 tokens</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Multiplication problem</h2>
+            <pre><code class="language-text">10 MCP servers
+x 5 tools each
+x 200 tokens/tool
+= 10,000 tokens per step
+
+15 agent steps = 150,000 schema tokens</code></pre>
+          </section>
+
+          <section>
+            <h2>Audit rule</h2>
+            <ul>
+              <li>Disable servers not needed now.</li>
+              <li>Use per-workspace config, not global everything.</li>
+              <li>Prefer built-in tools over duplicate filesystem MCPs.</li>
+              <li>Use skills for occasional capabilities.</li>
+              <li>Scope large plugins by namespace/mode when supported.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Tool output compression</h2>
+            <div class="card">
+              <h3>RTK</h3>
+              <p>CLI proxy filters noisy shell output before agent reads it: tests, git diff, grep, logs, file listings.</p>
+              <pre><code class="language-bash">rtk init --copilot</code></pre>
+            </div>
+          </section>
+
+          <section>
+            <h2>Azure MCP case pattern</h2>
+            <p>One large plugin can dominate System/Tools budget.</p>
+            <pre><code class="language-bash">--namespace appservice --namespace cosmos --namespace keyvault --namespace storage</code></pre>
+            <p class="small">Scope by service/persona. Avoid "all tools" mode unless truly needed.</p>
+          </section>
+
+          <section>
+            <h2>Lab 11: MCP audit</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Remove hidden schema overhead.</p>
+              <p><strong>Do:</strong> inventory enabled MCP servers, tool counts, global vs workspace scope, owner, frequency of use.</p>
+              <p><strong>Deliverable:</strong> keep/disable/scope table + restart plan.</p>
+              <p><strong>Time:</strong> 30 minutes.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Enterprise lab: tool policy</h2>
+            <div class="card enterprise">
+              <h3>Customer-side action</h3>
+              <p>Define approved MCP servers by persona: developer, data, platform, security, support.</p>
+              <p><strong>Deliverable:</strong> default MCP profile per team + exception process for large plugins.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 3</p>
+            <h2>Comparisons and data</h2>
+            <p>Use evidence to pick habits with best impact-to-effort.</p>
+          </section>
+
+          <section>
+            <h2>Same task, different cost</h2>
+            <table>
+              <thead><tr><th>Technique</th><th>Prompt</th><th>Tokens</th></tr></thead>
+              <tbody>
+                <tr><td>Verbose</td><td>Please add comprehensive error handling...</td><td>~40</td></tr>
+                <tr><td>Caveman lite</td><td>Add error handling. Cover null, types, network.</td><td>~16</td></tr>
+                <tr><td>Caveman full</td><td>Error handling. Cover: null, bad type, net error.</td><td>~12</td></tr>
+                <tr><td>Ultra</td><td>Error handling: null/bad-type/net-err.</td><td>~7</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Big winners</h2>
+            <ol>
+              <li>Caveman-speak + precise prompts.</li>
+              <li>Code-only / constrained output.</li>
+              <li>Shrink always-on context.</li>
+              <li>Ask Mode for simple questions.</li>
+              <li>Audit MCP servers.</li>
+              <li>Retune prompts after model changes.</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>Quality curve</h2>
+            <pre><code class="language-text">Savings:  lite ---- full ---- ultra ---- extreme
+Risk:     low  ---- low  ---- medium --- high</code></pre>
+            <p class="accent">Sweet spot: full caveman. Maximum return, negligible risk for technical users.</p>
+          </section>
+
+          <section>
+            <h2>Lab 12: prioritize techniques</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Pick changes by impact, effort, risk.</p>
+              <p><strong>Do:</strong> rate each technique 1-5 for impact, effort, adoption friction, governance need.</p>
+              <p><strong>Deliverable:</strong> team top 5 and "do not adopt" list.</p>
+              <p><strong>Time:</strong> 25 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 4</p>
+            <h2>Practical setup</h2>
+            <p>Turn techniques into repo and team defaults.</p>
+          </section>
+
+          <section>
+            <h2>Repo setup steps</h2>
+            <ol>
+              <li>Create compressed <code>.github/copilot-instructions.md</code>.</li>
+              <li>Add compressed project-specific rules.</li>
+              <li>Split path-specific guidance with <code>applyTo</code>.</li>
+              <li>Use Auto by default; pin only with reason.</li>
+              <li>Add <code>copilot-setup-steps.yml</code> for Coding Agent.</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>Starter instruction template</h2>
+            <pre><code class="language-text">Terse like caveman. Technical substance exact. Only fluff die.
+Drop: articles, filler, pleasantries, hedging.
+Fragments OK. Short synonyms. Code unchanged.
+Code only for generation tasks. No explanation unless asked.
+Minimize tool calls. Batch related reads/edits.</code></pre>
+          </section>
+
+          <section>
+            <h2>Coding Agent setup</h2>
+            <pre><code class="language-yaml"># .github/copilot-setup-steps.yml
+steps:
+  - name: Install dependencies
+    run: npm ci
+  - name: Build
+    run: npm run build</code></pre>
+            <p class="small">Prevents discovery by trial and error. Saves agent steps.</p>
+          </section>
+
+          <section>
+            <h2>Precise issue template</h2>
+            <pre><code class="language-text">Bug: login fails when email contains "+".
+File: src/auth/login.ts, validateEmail() L42.
+Fix: URL-encode email before OAuth provider call.
+Test: add user+tag@example.com case.
+Done: targeted test passes.</code></pre>
+          </section>
+
+          <section>
+            <h2>Build habit over 4 weeks</h2>
+            <table>
+              <thead><tr><th>Week</th><th>Habit</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Compressed instructions + Ask Mode for questions</td></tr>
+                <tr><td>2</td><td>Caveman-lite prompts</td></tr>
+                <tr><td>3</td><td>Caveman-full + structured formats</td></tr>
+                <tr><td>4</td><td>Code-only defaults + reusable snippets outside always-on context</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Agent mode controls</h2>
+            <pre><code class="language-json">{
+  "chat.agent.maxRequests": 10,
+  "github.copilot.chat.agent.model": "auto"
+}</code></pre>
+            <p class="small">Cap runaway sessions carefully. Increase only when task requires it.</p>
+          </section>
+
+          <section>
+            <h2>Lab 13: repo implementation</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Create a repo-ready token optimization PR draft.</p>
+              <p><strong>Do:</strong> draft <code>copilot-instructions.md</code>, one scoped instruction file, one Coding Agent setup step, one issue template snippet.</p>
+              <p><strong>Deliverable:</strong> branch or patch proposal.</p>
+              <p><strong>Time:</strong> 45 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 4.2</p>
+            <h2>Model selection and pricing</h2>
+            <p>Separate Copilot docs, UBB framing, and vendor token pricing.</p>
+          </section>
+
+          <section>
+            <h2>Three pricing views</h2>
+            <table>
+              <thead><tr><th>View</th><th>Answers</th></tr></thead>
+              <tbody>
+                <tr><td>GitHub Copilot docs</td><td>Plan availability, model access, Auto behavior, published signals</td></tr>
+                <tr><td>UBB framing</td><td>AI-credit budgets and governance after cutover</td></tr>
+                <tr><td>Vendor API pricing</td><td>Input vs output intuition, not Copilot billing table</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Auto: practical meaning</h2>
+            <ul>
+              <li>Chooses from supported Auto pool.</li>
+              <li>Subject to plan and org policy.</li>
+              <li>Based on health and performance.</li>
+              <li>Discounted on eligible paid-plan Chat usage.</li>
+              <li>Does not automatically escalate to every premium model.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Reasoning effort</h2>
+            <table>
+              <thead><tr><th>Effort</th><th>Use for</th></tr></thead>
+              <tbody>
+                <tr><td>Low</td><td>High-volume simple chat/classification</td></tr>
+                <tr><td>Medium</td><td>Typical coding and tool-heavy work where supported</td></tr>
+                <tr><td>High/max</td><td>Architecture, security, novel decomposition</td></tr>
+              </tbody>
+            </table>
+            <p class="small warning">Use only on models that expose this control.</p>
+          </section>
+
+          <section>
+            <h2>Anti-patterns</h2>
+            <ul>
+              <li>Leaving premium model pinned all day.</li>
+              <li>Assuming Auto jumps to premium when task gets hard.</li>
+              <li>Equating vendor API pricing with Copilot billing.</li>
+              <li>Enabling every premium model for whole org first.</li>
+              <li>Ignoring plan/model availability.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Lab 14: model escalation policy</h2>
+            <div class="card enterprise">
+              <h3>Customer-side action</h3>
+              <p>Define when users may pin premium models and when Auto is required.</p>
+              <p><strong>Do:</strong> map workflows to default model lane, escalation trigger, expected value, rollback signal.</p>
+              <p><strong>Deliverable:</strong> one-page model policy draft.</p>
+              <p><strong>Time:</strong> 30 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Part 4.3</p>
+            <h2>Enterprise governance</h2>
+            <p>Admin controls cap spend. Prompt habits improve efficiency.</p>
+          </section>
+
+          <section>
+            <h2>Spend levers</h2>
+            <ol>
+              <li>Budget ceilings.</li>
+              <li>User-level AI-credit budgets.</li>
+              <li>Model availability policy.</li>
+            </ol>
+            <p class="small">Prompt compression does not cap spend. It reduces waste inside allowed usage.</p>
+          </section>
+
+          <section>
+            <h2>Set budgets first</h2>
+            <div class="card enterprise">
+              <h3>Customer-side action</h3>
+              <p>Set enterprise/org/cost-center budgets. Enable alerts early. Enable stop-usage after reporting is trusted. Review monthly.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>User-level tightening</h2>
+            <ul>
+              <li>Baseline users: low AI-credit budget.</li>
+              <li>Power users: higher budget with job need.</li>
+              <li><code>$0</code> budget: no usage-based features.</li>
+              <li>Review monthly and downgrade unused allocations.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Review models before enablement</h2>
+            <table>
+              <thead><tr><th>Question</th><th>Decision</th></tr></thead>
+              <tbody>
+                <tr><td>Which workflows need premium?</td><td>Enable narrowly</td></tr>
+                <tr><td>Which teams create measurable value?</td><td>Assign higher budgets</td></tr>
+                <tr><td>Which users can stay on Auto?</td><td>Keep default path cheap</td></tr>
+                <tr><td>What rollback signal?</td><td>Usage up, value flat</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Instruction scope governance</h2>
+            <ul>
+              <li>Org instructions: broad GitHub.com policy and review reminders.</li>
+              <li>Repo instructions: IDE workflow defaults and coding rules.</li>
+              <li>Path-specific instructions: local rules where context pays.</li>
+              <li>Do not assume org instructions apply everywhere; check docs.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Separate orgs: fallback only</h2>
+            <p>Useful for different model policies or billing boundaries when org structure already matches groups.</p>
+            <p class="warning">Costs: admin overhead, license complexity, user sprawl, SCIM/cost-center constraints.</p>
+          </section>
+
+          <section>
+            <h2>Measure right thing</h2>
+            <ol>
+              <li>Which teams exceed baseline?</li>
+              <li>Which users drive AI-credit usage?</li>
+              <li>Which models improve outcomes?</li>
+              <li>Which agent workflows spend without delivery value?</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>June 1 cutover checklist</h2>
+            <ol>
+              <li>Move from request counters to AI-credit budgets.</li>
+              <li>Decide pooled vs user-level budgets.</li>
+              <li>Review model availability before premium becomes direct spend.</li>
+              <li>Remind teams completions/next edits stay outside AI-credit billing.</li>
+              <li>Watch long chat and agent workflows first.</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>Lab 15: budget rollout</h2>
+            <div class="card enterprise">
+              <h3>Customer-side action</h3>
+              <p>Design budget rollout for one enterprise account.</p>
+              <p><strong>Do:</strong> choose pilot org, cost center, baseline budget, alert threshold, stop-usage rule, user exceptions.</p>
+              <p><strong>Deliverable:</strong> budget operating model.</p>
+              <p><strong>Time:</strong> 35 minutes.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 16: governance tabletop</h2>
+            <div class="card enterprise">
+              <h3>Scenario</h3>
+              <p>Agent sessions spike AI-credit usage 4x in one team. Delivery output unchanged.</p>
+              <p><strong>Decide:</strong> budget action, model policy action, instruction/context action, MCP audit action, comms plan.</p>
+              <p><strong>Time:</strong> 25 minutes.</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">Capstone</p>
+            <h2>30 day token optimization plan</h2>
+            <p>Turn workshop into customer rollout.</p>
+          </section>
+
+          <section>
+            <h2>Week-by-week rollout</h2>
+            <table>
+              <thead><tr><th>Week</th><th>Team action</th><th>Admin action</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Output defaults + Ask Mode</td><td>Usage baseline</td></tr>
+                <tr><td>2</td><td>Instruction pruning + scoped rules</td><td>Budget pilot</td></tr>
+                <tr><td>3</td><td>MCP audit + model routing</td><td>Model access review</td></tr>
+                <tr><td>4</td><td>Agent issue templates + setup steps</td><td>Monthly reporting cadence</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Capstone lab</h2>
+            <div class="card lab">
+              <h3>Goal</h3>
+              <p>Create customer-specific action plan.</p>
+              <p><strong>Sections:</strong> repo changes, user habits, MCP/tool policy, model policy, budgets, reporting, owner, due date.</p>
+              <p><strong>Deliverable:</strong> 30 day plan ready for customer sponsor.</p>
+              <p><strong>Time:</strong> 30 minutes.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Final checklist</h2>
+            <div class="grid">
+              <div class="card checkpoint">
+                <h3>Developer</h3>
+                <ul>
+                  <li>Code-only default</li>
+                  <li>Ask/Edit/Agent routing</li>
+                  <li>Concise prompts</li>
+                  <li>Fresh sessions</li>
+                </ul>
+              </div>
+              <div class="card checkpoint">
+                <h3>Repository</h3>
+                <ul>
+                  <li>Tiny always-on instructions</li>
+                  <li>Scoped <code>applyTo</code> files</li>
+                  <li>Coding Agent setup steps</li>
+                  <li>Precise issue templates</li>
+                </ul>
+              </div>
+              <div class="card checkpoint">
+                <h3>Platform</h3>
+                <ul>
+                  <li>MCP profiles</li>
+                  <li>Content Exclusion</li>
+                  <li>Model access policy</li>
+                  <li>RTK/CLI tool output strategy</li>
+                </ul>
+              </div>
+              <div class="card checkpoint">
+                <h3>Enterprise</h3>
+                <ul>
+                  <li>Budgets</li>
+                  <li>User-level caps</li>
+                  <li>Usage reporting</li>
+                  <li>Monthly review</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Closing message</h2>
+            <div class="quote">
+              Cheap defaults first. Premium access by exception. Measurement before expansion.
+            </div>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+    <script>
+      const presenterNotes = {
+        "Workshop outcome": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Set expectation: this is practical operating guidance, not theory. Participants should leave with repo changes, personal habits, and admin rollout decisions.</p>
+          <p>Ask room to keep one real repo/customer in mind for all labs.</p>
+        `,
+        "Important framing": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Say plainly: community/field guide, not official GitHub/Microsoft policy. For billing/admin controls, defer to docs.github.com.</p>
+          <p>This protects credibility with enterprise customers.</p>
+        `,
+        "8 hour agenda": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>Explain rhythm: short concept block, lab, share-out. Keep labs time-boxed; unfinished work becomes action-plan input.</p>
+          <p>Call out governance in final quarter, after practitioners understand cost mechanics.</p>
+        `,
+        "Navigation": `
+          <p><strong>Timing:</strong> 1 min.</p>
+          <p>Demo controls only if presenting live from browser. Use speaker view for notes; use overview if audience asks to jump sections.</p>
+        `,
+        "11 things to do right now": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Frame as executive summary. If customer only implements one page, implement this one.</p>
+          <p>Emphasize order: output, always-on context, mode/model/tool routing.</p>
+        `,
+        "Fastest wins": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>Explain these are near-zero setup habits. Output control is first because verbose answers cost repeatedly and are easy to stop.</p>
+          <p>Ask audience which one they already do; note gaps for later labs.</p>
+        `,
+        "More fast wins": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>Separate daily-user habits from platform controls. Chronicle and CodeAct are Copilot CLI-specific; do not oversell as universal Copilot Chat features.</p>
+        `,
+        "The priority stack": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Use this as repeated mental model for day. Output first changes every response. Always-on context changes every request. Mode/model/tool routing changes task shape. Governance caps spend.</p>
+        `,
+        "Lab 0: baseline your habits": `
+          <p><strong>Timing:</strong> 10 min lab + 5 min share-out.</p>
+          <p>Have participants score themselves quickly. Do not debate exact token counts. Goal is identifying highest-friction current habit.</p>
+          <p>Collect 2-3 examples to reuse in later labs.</p>
+        `,
+        "Why tokens matter": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Transition from tips to mechanism. If people understand what enters the context window, later recommendations feel obvious.</p>
+        `,
+        "Tokens are subwords": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Keep simple: tokens are not words. Common English compresses well. Polite filler still has cost and no task value.</p>
+          <p>Avoid deep tokenizer internals unless audience asks.</p>
+        `,
+        "Cost model": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Explain three buckets. Vendor pricing illustrates output/input asymmetry; do not claim exact Copilot public per-token table unless docs publish it.</p>
+          <p>Key takeaway: output control is disproportionately valuable.</p>
+        `,
+        "Input is bigger than your prompt": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Challenge common misconception: typed prompt is small. Hidden context dominates: files, history, instructions, tools.</p>
+          <p>Ask: "What context did you not intend to send today?"</p>
+        `,
+        "Coding Agent multiplier": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>One visible task can be many internal calls. Each step pays baseline context and accumulates tool outputs.</p>
+          <p>This justifies precise issue descriptions and setup steps later.</p>
+        `,
+        "Lab 1: token anatomy": `
+          <p><strong>Timing:</strong> 15 min lab + 5 min share-out.</p>
+          <p>Use recent real Copilot task. Have teams identify hidden context sources. Push them to distinguish user prompt vs auto context.</p>
+        `,
+        "Prompt compression": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Set rule: compression is not dumbing down. Technical substance stays exact. Only fluff dies.</p>
+        `,
+        "Caveman pattern": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Read pattern aloud. Show that files, functions, constraints, and done conditions matter more than grammar.</p>
+          <p>Warn: do not abbreviate unknown project terms without defining them.</p>
+        `,
+        "Before vs after": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Ask audience which version they would rather receive as a task. Most pick caveman because action is clearer.</p>
+        `,
+        "Compression levels": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Recommend full as default for internal development. Lite for customer-facing/onboarding. Ultra only when domain is shared and ambiguity is low.</p>
+        `,
+        "Structured beats prose": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Point out structure improves quality, not just token count. It exposes missing requirements: status codes, validation fields, persistence.</p>
+        `,
+        "Code-centric prompting": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Developers can often express intent more compactly with signatures, TODOs, or "like X but Y" references.</p>
+        `,
+        "Guardrails as invariants": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Declarative invariants are easier for models to satisfy and easier for humans to review.</p>
+          <p>Use this for instruction files too.</p>
+        `,
+        "Lab 2: prompt compression ladder": `
+          <p><strong>Timing:</strong> 20 min lab + 5 min share-out.</p>
+          <p>Pair people. One rewrites; other checks for lost meaning. Winning prompt is shortest one that remains unambiguous.</p>
+        `,
+        "Lab 3: prompt A/B": `
+          <p><strong>Timing:</strong> 20 min.</p>
+          <p>Run in Ask/Edit/Agent depending available environment. Compare not only output but number of clarifications and files touched.</p>
+        `,
+        "Language comparison": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Introduce as myth-busting. Fewer characters does not mean fewer tokens.</p>
+        `,
+        "CJK assumption fails": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Use table to show counterintuitive result. CJK can be denser for humans, but tokenizer economics differ.</p>
+        `,
+        "Why": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Explain English-heavy tokenizer training. Avoid framing as language quality; this is compression mechanics.</p>
+        `,
+        "Practical rule": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>For token optimization, use terse English. If native language yields much better requirement clarity, quality can trump savings.</p>
+        `,
+        "Lab 4: tokenizer reality check": `
+          <p><strong>Timing:</strong> 20 min.</p>
+          <p>Have multilingual participants test actual prompts. Capture surprising results. End with local team policy, not universal moralizing.</p>
+        `,
+        "Context management": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Shift from typed prompts to structural input. Biggest input wins come from what is always loaded or auto-included.</p>
+        `,
+        "Always-on files cost every turn": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Clarify different file conventions can coexist. Cost issue is shared: always-on text becomes repeated baseline.</p>
+          <p>Deduplicate if same guidance appears in multiple always-on files.</p>
+        `,
+        "Instruction compression example": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Use this as concrete target. A good instruction file is closer to config than a wiki.</p>
+        `,
+        "Context hygiene": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Emphasize mundane actions: close tabs, avoid generated files, keep large artifacts ignored, restart stale chats.</p>
+        `,
+        "Use scoped instructions": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Explain that path scoping keeps rich guidance available without charging every unrelated interaction.</p>
+          <p>Good enterprise pattern: central standards, repo-specific tiny core, path-specific depth.</p>
+        `,
+        "Always-on vs conditional vs on-demand": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Ask where their current checklists live. Anything used monthly should not be paid on every prompt.</p>
+        `,
+        "Cache-friendly behavior": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>Keep stable prefixes stable. Frequent context churn hurts both speed and cache value.</p>
+        `,
+        "Enterprise note: Content Exclusion": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Stress customer-side admin ownership. Primary reason is policy/privacy. Token savings are secondary and surface-dependent.</p>
+          <p>Action: identify paths and owner for exclusion review.</p>
+        `,
+        "Lab 5: context audit": `
+          <p><strong>Timing:</strong> 30 min lab + 10 min share-out.</p>
+          <p>Use one real repo. If no repo access, use anonymized instruction examples. Force decisions: keep, scope, on-demand, delete.</p>
+        `,
+        "Output control": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Position as highest ROI because it is easy and applies every time. It also improves signal for humans.</p>
+        `,
+        "Default line": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>Say: use for implementation, not learning. If explanation is needed, ask explicitly and accept cost.</p>
+        `,
+        "Format constraints": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>These are output budgets. Pair with exact task so model does not spend tokens choosing structure.</p>
+        `,
+        "Project default": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Recommend putting this in repo instructions for IDE workflows. Org instructions alone may not cover all surfaces.</p>
+        `,
+        "Lab 6: output A/B": `
+          <p><strong>Timing:</strong> 15 min.</p>
+          <p>Participants should compare response length and usefulness. Do not score by shortest alone; score by shortest acceptable output.</p>
+        `,
+        "Lab 7: format forcing": `
+          <p><strong>Timing:</strong> 15 min.</p>
+          <p>End with reusable snippets: review verdict, debugging summary, risk list, migration checklist, test plan.</p>
+        `,
+        "Workflow optimization": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Transition: sometimes biggest saving is picking different workflow, not shorter wording.</p>
+        `,
+        "Commit and PR text matter": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Agents read git history and review comments. Terse, actionable history helps humans and models.</p>
+        `,
+        "Ask vs Edit vs Agent": `
+          <p><strong>Timing:</strong> 6 min.</p>
+          <p>Make this practical. Ask is cheapest. Edit is targeted. Agent is powerful but expensive. Coding Agent for autonomous issue-to-PR.</p>
+          <p>Common failure: vague prompt in Agent Mode.</p>
+        `,
+        "Auto model default": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Auto is baseline. Premium pinning is explicit exception. This reduces accidental expensive sessions.</p>
+        `,
+        "Retune prompts when model changes": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Model upgrades are dependency upgrades. Retune instruction files and agent profiles based on official prompt guide, then review diff.</p>
+        `,
+        "When not to compress": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Compression must not reduce safety or legal clarity. Encourage teams to mark contexts where full prose is mandatory.</p>
+        `,
+        "Close loop with usage coaching": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Chronicle catches repeated CLI confusion; AI Engineering Coach surfaces VS Code habits. Use outputs as review suggestions, not automatic policy.</p>
+        `,
+        "Lab 8: mode routing drill": `
+          <p><strong>Timing:</strong> 20 min.</p>
+          <p>Use scenario cards. Have people vote mode first, then discuss. Capture edge cases requiring clarification before Agent.</p>
+        `,
+        "Lab 9: model routing drill": `
+          <p><strong>Timing:</strong> 20 min.</p>
+          <p>Focus on decision rules, not exact model names. Names change; lanes remain: cheap/included, standard, premium.</p>
+        `,
+        "Always-on context problem": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Counterintuitive section. Prepare audience: more context can reduce accuracy by adding noise.</p>
+        `,
+        "Research signal": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Do not overclaim. Treat data as warning against generated boilerplate, not proof all context files are bad.</p>
+        `,
+        "Why context hurts": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Use four mechanisms to diagnose customer repos. Most bloated files combine all four.</p>
+        `,
+        "Keep landmines only": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Great facilitation question: "Can agent discover this by reading code?" If yes, delete or scope it.</p>
+        `,
+        "Bug tracker model": `
+          <p><strong>Timing:</strong> 3 min.</p>
+          <p>Instruction files need deletion discipline. Add one line when model trips; delete when code/process fixes root cause.</p>
+        `,
+        "Lab 10: landmine pruning": `
+          <p><strong>Timing:</strong> 35 min.</p>
+          <p>Use strict 10-line cap to force priority. If team argues, move disputed rules into scoped/on-demand bucket.</p>
+        `,
+        "MCP and tool costs": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Introduce hidden tax: tool definitions are context, even when tool is unused.</p>
+        `,
+        "Measure first": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>In CLI, /context gives concrete breakdown. In VS Code, approximate via server/tool count until equivalent telemetry exists.</p>
+        `,
+        "Every tool costs tokens": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Schema tokens include descriptions and parameter JSON. Complex tools can be surprisingly expensive.</p>
+        `,
+        "Multiplication problem": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Pause on math. Per-step overhead multiplied by agent steps becomes six figures quickly.</p>
+        `,
+        "Audit rule": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Practical enterprise pattern: persona-based MCP profiles. Developers should not globally enable every integration.</p>
+        `,
+        "Tool output compression": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Schema audit reduces what is loaded. RTK reduces what commands return. Different levers; both useful.</p>
+          <p>Mention external tool status if customer requires security review.</p>
+        `,
+        "Azure MCP case pattern": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Use as example of scoping large plugins. Namespaces/personas beat all-or-nothing enablement.</p>
+        `,
+        "Lab 11: MCP audit": `
+          <p><strong>Timing:</strong> 30 min.</p>
+          <p>Have admins and developers pair. Developers know what they use; admins know governance constraints.</p>
+        `,
+        "Enterprise lab: tool policy": `
+          <p><strong>Timing:</strong> 20 min.</p>
+          <p>Output should be operational: approved default servers, scoped large plugins, exception workflow, review cadence.</p>
+        `,
+        "Comparisons and data": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Use this as decision checkpoint after technique tour. Data helps prioritize adoption.</p>
+        `,
+        "Same task, different cost": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Quality stays acceptable across versions until ultra becomes ambiguous. This supports full-caveman sweet spot.</p>
+        `,
+        "Big winners": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Have audience compare this list against their baseline from Lab 0. Pick top two for immediate adoption.</p>
+        `,
+        "Quality curve": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Compression is not linear. First cuts are free; extreme compression increases rework risk.</p>
+        `,
+        "Lab 12: prioritize techniques": `
+          <p><strong>Timing:</strong> 25 min.</p>
+          <p>Use impact/effort matrix. Avoid adopting every technique at once; customers need a sequenced change plan.</p>
+        `,
+        "Practical setup": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Now convert ideas into repo artifacts and repeatable habits.</p>
+        `,
+        "Repo setup steps": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Explain dependency chain: tiny global instructions first, scoped depth second, Coding Agent setup third.</p>
+        `,
+        "Starter instruction template": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Encourage teams to copy then customize. Add project-specific landmines sparingly.</p>
+        `,
+        "Coding Agent setup": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Pre-install/build saves discovery attempts. Keep setup deterministic and minimal.</p>
+        `,
+        "Precise issue template": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Issue quality controls agent exploration. Good issue descriptions are cheaper and produce better PRs.</p>
+        `,
+        "Build habit over 4 weeks": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Adoption sequence prevents overload. Start with defaults, then habits, then advanced routing.</p>
+        `,
+        "Agent mode controls": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Max requests is a safety rail, not cure-all. Too low can stop valid work. Tune by workflow.</p>
+        `,
+        "Lab 13: repo implementation": `
+          <p><strong>Timing:</strong> 45 min.</p>
+          <p>Best lab for practitioners. If no write access, produce patch text or PR checklist.</p>
+        `,
+        "Model selection and pricing": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Reset precision: model advice mixes billing concepts. Keep them separate to avoid wrong customer claims.</p>
+        `,
+        "Three pricing views": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Use GitHub docs for Copilot controls. Use UBB framing for governance. Use vendor pricing for input/output intuition only.</p>
+        `,
+        "Auto: practical meaning": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Auto is cheap default lane, not magic premium escalation. Customers must enable/pin premium intentionally.</p>
+        `,
+        "Reasoning effort": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Where exposed, effort is another cost dial. Use lowest effort that satisfies task. Hard tasks justify high effort.</p>
+        `,
+        "Anti-patterns": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Ask customers which anti-pattern they see most. Premium pinning and broad enablement are common.</p>
+        `,
+        "Lab 14: model escalation policy": `
+          <p><strong>Timing:</strong> 30 min.</p>
+          <p>Policy must include trigger and rollback. "Developer wants it" is not enough; define workflow value.</p>
+        `,
+        "Enterprise governance": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Shift from behavior change to controls. Admin controls cap spend; developer habits reduce waste inside cap.</p>
+        `,
+        "Spend levers": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Repeat: budgets, user budgets, model availability. Prompt text is not a spend cap.</p>
+        `,
+        "Set budgets first": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Start with pilot and alerts. Only enable stop-usage once stakeholders trust reporting and understand impact.</p>
+        `,
+        "User-level tightening": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Use budgets to match job need. Explain $0 implication carefully: usage-based features blocked, but completions/next edits differ per docs.</p>
+        `,
+        "Review models before enablement": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Stage premium access. Review output quality and usage before widening. Tie model access to workflow, not seniority.</p>
+        `,
+        "Instruction scope governance": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Important docs nuance: org instructions do not automatically cover every IDE surface. Repo instructions carry IDE defaults.</p>
+        `,
+        "Separate orgs: fallback only": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Do not lead with org sprawl. Use separate orgs only when billing/policy boundary already maps to operating model.</p>
+        `,
+        "Measure right thing": `
+          <p><strong>Timing:</strong> 4 min.</p>
+          <p>Usage without outcome is incomplete. Pair AI-credit reporting with delivery metrics: PRs, cycle time, defects, review quality.</p>
+        `,
+        "June 1 cutover checklist": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Make this customer-specific. Confirm dates/status against official docs at presentation time if needed.</p>
+        `,
+        "Lab 15: budget rollout": `
+          <p><strong>Timing:</strong> 35 min.</p>
+          <p>Ask for concrete numbers if customer can share. Otherwise use relative tiers: pilot, baseline, power user, blocked.</p>
+        `,
+        "Lab 16: governance tabletop": `
+          <p><strong>Timing:</strong> 25 min.</p>
+          <p>Facilitate like incident response. Separate immediate containment from root-cause fixes and communications.</p>
+        `,
+        "30 day token optimization plan": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Capstone combines labs into rollout. Make owners and dates explicit.</p>
+        `,
+        "Week-by-week rollout": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Use as default plan. Adjust based on customer maturity and admin readiness.</p>
+        `,
+        "Capstone lab": `
+          <p><strong>Timing:</strong> 30 min.</p>
+          <p>Have teams fill plan live. Require one owner per workstream: repo, users, platform, enterprise.</p>
+        `,
+        "Final checklist": `
+          <p><strong>Timing:</strong> 5 min.</p>
+          <p>Use to verify plan coverage. If one quadrant is empty, customer rollout has a blind spot.</p>
+        `,
+        "Closing message": `
+          <p><strong>Timing:</strong> 2 min.</p>
+          <p>Close with operating principle. Token optimization is governance plus habits, not a one-time prompt trick.</p>
+        `
+      };
+
+      for (const section of document.querySelectorAll(".slides section")) {
+        if (section.querySelector("section")) continue;
+        if (section.querySelector(":scope > aside.notes")) continue;
+        const heading = section.querySelector("h1, h2");
+        const title = heading?.textContent.trim();
+        const notes = presenterNotes[title];
+        if (!notes) continue;
+        const aside = document.createElement("aside");
+        aside.className = "notes";
+        aside.innerHTML = notes;
+        section.appendChild(aside);
+      }
+
+      Reveal.initialize({
+        hash: true,
+        slideNumber: "c/t",
+        transition: "slide",
+        width: 1280,
+        height: 720,
+        margin: 0.06,
+        plugins: [RevealMarkdown, RevealNotes, RevealHighlight]
+      });
+    </script>
+  </body>
+</html>
