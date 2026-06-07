@@ -1,0 +1,1795 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot Token 最佳化 - 8 小時工作坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reset.css" integrity="sha384-AJKv9Ui5SfA0VsFksFI9GuA1ztX9Ca3CLP6HGfX4YY/tYSVodC+PUszaQZFIlkuy" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" integrity="sha384-tK61vs+AeByBmiQ/i6CLgp/PbaaoB/k7M4J5mlX70GVtBPGUk5avjbXhSwhsf3fS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" integrity="sha384-tGFyyraypan1jA66tD+w5qjIQFygKQc3MiwIrZTma4BXsJ58dSimuWOGWd+SGa1M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" integrity="sha384-0rrWATPYzlkqxkUhsXu1QkrO6K3rq4d6FqJQhcCJ7jQcZhb6plkpODMjpoiAYidE" crossorigin="anonymous">
+    <style>
+      :root {
+        --r-main-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --r-heading-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --r-link-color: #58a6ff;
+        --r-selection-background-color: #238636;
+      }
+
+      .reveal {
+        font-size: 34px;
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        text-transform: none;
+        letter-spacing: -0.03em;
+      }
+
+      .reveal h1 {
+        font-size: 2.2em;
+      }
+
+      .reveal h2 {
+        font-size: 1.65em;
+      }
+
+      .reveal h3 {
+        font-size: 1.25em;
+      }
+
+      .reveal p,
+      .reveal li,
+      .reveal td,
+      .reveal th {
+        line-height: 1.24;
+      }
+
+      .reveal ul,
+      .reveal ol {
+        width: 88%;
+      }
+
+      .reveal table {
+        font-size: 0.58em;
+        margin-top: 0.6em;
+      }
+
+      .reveal pre {
+        width: 96%;
+        font-size: 0.58em;
+        box-shadow: none;
+      }
+
+      .reveal code {
+        background: rgba(110, 118, 129, 0.22);
+        border-radius: 0.18em;
+        padding: 0.06em 0.18em;
+      }
+
+      .reveal pre code {
+        background: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 10px;
+        padding: 1em;
+      }
+
+      .kicker {
+        color: #7ee787;
+        font-size: 0.62em;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .muted {
+        color: #8b949e;
+      }
+
+      .small {
+        font-size: 0.68em;
+      }
+
+      .tiny {
+        font-size: 0.52em;
+      }
+
+      .accent {
+        color: #7ee787;
+      }
+
+      .warning {
+        color: #ffa657;
+      }
+
+      .danger {
+        color: #ff7b72;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65em;
+        align-items: stretch;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.55em;
+      }
+
+      .card {
+        background: rgba(22, 27, 34, 0.92);
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        padding: 0.75em;
+        text-align: left;
+      }
+
+      .card h3,
+      .card h4 {
+        margin: 0 0 0.35em 0;
+      }
+
+      .card p,
+      .card li {
+        font-size: 0.72em;
+      }
+
+      .lab {
+        border-left: 8px solid #7ee787;
+      }
+
+      .enterprise {
+        border-left: 8px solid #58a6ff;
+      }
+
+      .checkpoint {
+        border-left: 8px solid #ffa657;
+      }
+
+      .quote {
+        font-size: 1.05em;
+        color: #c9d1d9;
+        border-left: 8px solid #7ee787;
+        padding-left: 0.8em;
+        text-align: left;
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8em;
+        align-items: start;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .left {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <p class="kicker">8 小時客戶工作坊</p>
+          <h1>GitHub Copilot Token 最佳化</h1>
+          <p>花更少 token。維持品質。建立企業級護欄。</p>
+          <p class="small muted">根據 repo 指南內容產生的 Reveal.js 投影片。</p>
+          <aside class="notes">
+            一開始先說明免責聲明：這是社群整理的指南，不是 GitHub 或 Microsoft 的官方指引。受支援的控制項請以官方文件為準。
+          </aside>
+        </section>
+
+        <section>
+          <h2>工作坊成果</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>說明成本</h3>
+              <p>輸入、輸出、快取 token、agent 迴圈、MCP schema、模型分流。</p>
+            </div>
+            <div class="card">
+              <h3>改變行為</h3>
+              <p>Prompt 壓縮、輸出控制、context 衛生、Ask/Edit/Agent 分流。</p>
+            </div>
+            <div class="card">
+              <h3>交付推行計畫</h3>
+              <p>企業預算、模型政策、指令範圍、每月檢討循環。</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>重要前提</h2>
+          <div class="quote">
+            這份簡報是根據此 repo 中的實務指引整理而成，不是 GitHub 或 Microsoft 的官方指引。
+          </div>
+          <p class="small">受支援的功能行為、計費控制與管理員政策，請參考 <code>docs.github.com/copilot</code>。</p>
+        </section>
+
+        <section>
+          <h2>8 小時議程</h2>
+          <table>
+            <thead>
+              <tr><th>時間</th><th>區塊</th><th>產出</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>00:00-00:30</td><td>為什麼 token 很重要 + 快速見效做法</td><td>共同成本模型</td></tr>
+              <tr><td>00:30-02:00</td><td>Prompt、語言、輸出實驗</td><td>精簡 prompt 範本</td></tr>
+              <tr><td>02:00-03:15</td><td>Context + 常駐檔案</td><td>指令修剪 diff</td></tr>
+              <tr><td>03:15-04:15</td><td>工作流程 + 模式</td><td>模式分流速查表</td></tr>
+              <tr><td>04:15-05:15</td><td>MCP／工具成本 + 資料</td><td>MCP 稽核清單</td></tr>
+              <tr><td>05:15-06:15</td><td>實務設定</td><td>Repo 設定檢查清單</td></tr>
+              <tr><td>06:15-07:30</td><td>模型／定價 + 治理</td><td>客戶管理端推行方案</td></tr>
+              <tr><td>07:30-08:00</td><td>收尾統整</td><td>30 天 token 計畫</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>導覽方式</h2>
+          <p>水平 = 章節。垂直 = 章節投影片 + 實驗。</p>
+          <p class="small muted">按 <code>Esc</code> 可看總覽。按 <code>S</code> 可看講者備註。</p>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">快速開始</p>
+            <h2>現在立刻要做的 11 件事</h2>
+            <p>先從輸出下手，再縮小結構性輸入，最後再分流模型與工具。</p>
+          </section>
+
+          <section>
+            <h2>最快見效的做法</h2>
+            <ol>
+              <li><strong>只回程式碼</strong>：每個 token 的 ROI 最高。</li>
+              <li><strong>限制格式</strong>：條列、單句、JSON、表格。</li>
+              <li><strong>縮小常駐 context</strong>：指令檔與 agent 檔案。</li>
+              <li><strong>預設使用 Auto</strong>：只有在有正當理由時才釘選 premium。</li>
+              <li><strong>簡單問題用 Ask Mode</strong>。</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>更多快速見效做法</h2>
+            <ol start="6">
+              <li><strong>用 <code>applyTo</code> 限定 context 範圍</strong>。</li>
+              <li><strong>寫精準的 prompt</strong>：目標檔案、函式、完成條件。</li>
+              <li><strong>依目標模型重新調整 prompt</strong>。</li>
+              <li><strong>稽核 MCP servers</strong>。</li>
+              <li><strong>在 Copilot CLI 執行 <code>/chronicle improve</code></strong>。</li>
+              <li><strong>長串 CLI 工具鏈可試試 CodeAct</strong>。</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>優先順序堆疊</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>先管輸出</h3>
+                <p>冗長回答很昂貴。一條預設指令就會影響每一次回應。</p>
+              </div>
+              <div class="card">
+                <h3>第二是常駐內容</h3>
+                <p>指令檔與工具 schema 會重複載入。基線再小，累積起來也很可觀。</p>
+              </div>
+              <div class="card">
+                <h3>第三是模式</h3>
+                <p>問題用 Ask。單檔修改用 Edit。多步驟工作用 Agent。</p>
+              </div>
+              <div class="card">
+                <h3>第四是治理</h3>
+                <p>預算能封頂支出。模型政策能限制昂貴路徑。</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 0：建立你的習慣基準</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>在學技巧之前，先找出你最主要的 3 個 token 漏點。</p>
+              <p><strong>請做：</strong>把每項標成綠／黃／紅：輸出冗長度、指令大小、開啟的分頁、Agent 使用、MCP 數量、模型釘選、過長聊天歷史。</p>
+              <p><strong>交付物：</strong>個人基準 + 一個「今天就修」的行動。</p>
+              <p><strong>時間：</strong>10 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 1 部分</p>
+            <h2>為什麼 token 很重要</h2>
+            <p>Token 影響的是成本、速度、限制，還有 context 容量。</p>
+          </section>
+
+          <section>
+            <h2>Token 是子詞</h2>
+            <div class="two-col">
+              <div class="card">
+                <h3>BPE 行為</h3>
+                <ul>
+                  <li>常見字詞可能只占一個 token。</li>
+                  <li>罕見字詞會被拆成多個片段。</li>
+                  <li>標點與贅詞也都會計入。</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>核心觀念</h3>
+                <p><code>Sure, I'd be happy to help!</code> 這種話大約就會燒掉 10 個 token，卻沒有任何技術價值。</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>成本模型</h2>
+            <table>
+              <thead><tr><th>類別</th><th>包含內容</th><th>控制桿</th></tr></thead>
+              <tbody>
+                <tr><td>輸入</td><td>Prompt、context、檔案、歷史、工具</td><td>限縮範圍並壓縮</td></tr>
+                <tr><td>快取</td><td>穩定且重複使用的前綴</td><td>讓穩定 context 保持穩定</td></tr>
+                <tr><td>輸出</td><td>模型回應</td><td>只回程式碼、精簡格式</td></tr>
+              </tbody>
+            </table>
+            <p class="small warning">在供應商定價範例中，輸出 token 的成本通常明顯高於輸入 token。</p>
+          </section>
+
+          <section>
+            <h2>輸入比你的 prompt 更大</h2>
+            <pre><code class="language-text">Context window
+├─ System prompt
+├─ copilot-instructions.md / AGENTS.md
+├─ 檔案 context 與開啟的分頁
+├─ 對話歷史
+├─ MCP tool schemas
+└─ 你輸入的 prompt</code></pre>
+            <p class="small">你那個 20 個字的 prompt，可能只是包在數千個隱藏 token 裡面而已。</p>
+          </section>
+
+          <section>
+            <h2>Coding Agent 放大效應</h2>
+            <p>一次從 Issue 到 PR 的完整流程，不只是送出一個請求。</p>
+            <div class="grid">
+              <div class="card">
+                <h3>Agent 步驟</h3>
+                <p>規劃、搜尋、讀檔、編輯、跑測試、檢查失敗、重試。</p>
+              </div>
+              <div class="card">
+                <h3>疊加效應</h3>
+                <p>每一步都會重新載入基線 context，還會加上前一步的工具結果。</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 1：token 結構解析</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>把看得到的 prompt 和隱藏的 context 分開來看。</p>
+              <p><strong>請做：</strong>選一個最近的 Copilot 任務。列出可能的 context 來源：開啟的檔案、被參照的檔案、指令、歷史、工具、輸出。</p>
+              <p><strong>討論：</strong>哪個來源最容易控制？</p>
+              <p><strong>時間：</strong>15 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.1 部分</p>
+            <h2>Prompt 壓縮</h2>
+            <p>用更少 token 表達同一件事，同時保留技術精準度。</p>
+          </section>
+
+          <section>
+            <h2>原始人寫法</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>刪掉</h3>
+                <p>冠詞、贅詞、客套話、保留語氣、緩和詞。</p>
+              </div>
+              <div class="card">
+                <h3>保留</h3>
+                <p>技術術語、程式碼、檔名、限制條件、精確完成條件。</p>
+              </div>
+            </div>
+            <p class="accent"><code>[thing] [action] [reason]. [next step].</code></p>
+          </section>
+
+          <section>
+            <h2>前後對照</h2>
+            <table>
+              <thead><tr><th>冗長版</th><th>原始人版</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Could you please review this pull request and let me know if there are any issues?</td>
+                  <td><code>Review PR. Flag issues.</code></td>
+                </tr>
+                <tr>
+                  <td>Can you explain what this error message means and how I should fix it?</td>
+                  <td><code>Explain error. How fix.</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>壓縮等級</h2>
+            <table>
+              <thead><tr><th>等級</th><th>風格</th><th>適用時機</th></tr></thead>
+              <tbody>
+                <tr><td>Lite</td><td>專業但精簡</td><td>對外簡報、新人上手</td></tr>
+                <tr><td>Full</td><td>片語式、零廢話</td><td>日常開發者 prompt</td></tr>
+                <tr><td>Ultra</td><td>縮寫、箭頭、極短</td><td>高頻、熟悉領域</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>結構化勝過散文式描述</h2>
+            <pre><code class="language-text">POST /api/users
+驗證：
+- name: string，必填
+- email: string，必填，格式有效
+驗證失敗回 400
+成功回 201，回傳建立後的 user
+存入 DB</code></pre>
+            <p class="small">條列與 key-value 會強迫內容更清楚，也能減少贅字。</p>
+          </section>
+
+          <section>
+            <h2>以程式碼為中心的 prompting</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>自然語言</h3>
+                <p>建立一個函式，接收數字、濾掉負值、把剩下的值乘二，最後回傳總和。</p>
+              </div>
+              <div class="card">
+                <h3>以程式碼為中心</h3>
+                <p><code>fn(nums) -> filter(&gt;0) -> map(*2) -> sum</code></p>
+                <p><code>Like getUserById but for emails. 404 if missing.</code></p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>把護欄寫成不變條件</h2>
+            <table>
+              <thead><tr><th>冗長程序</th><th>壓縮後的不變條件</th></tr></thead>
+              <tbody>
+                <tr><td>Make sure every SQL query parameterizes values...</td><td><code>SQL: parameterized queries only. No concatenation.</code></td></tr>
+                <tr><td>Please write tests for any new code...</td><td><code>New code -> tests. Cover happy + error.</code></td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Lab 2：prompt 壓縮梯度</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>把一個真實 prompt 改寫成三種版本：lite、full、ultra。</p>
+              <p><strong>請做：</strong>保留檔名、行號、限制條件與完成條件，只刪掉廢話。</p>
+              <p><strong>比較：</strong>哪個版本最短，同時又不會增加歧義？</p>
+              <p><strong>時間：</strong>20 分鐘。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 3：prompt A/B</h2>
+            <div class="card lab">
+              <h3>試試這個 vs 那個</h3>
+              <pre><code class="language-text">A: Could you take a look at auth and improve error handling?
+
+B: File: src/auth/login.ts.
+Bug: null user causes .email crash.
+Fix: null guard before .email.
+Test: add null-user case.
+Done: targeted test passes.</code></pre>
+              <p><strong>執行：</strong>先用 A，再用 B 問 Copilot。比較讀了哪些檔案、提出多少澄清、輸出長度如何。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.2 部分</p>
+            <h2>語言比較</h2>
+            <p>在 prompt 上，英文通常是 token 效率最高的語言。</p>
+          </section>
+
+          <section>
+            <h2>CJK 假設失靈</h2>
+            <table>
+              <thead><tr><th>語言</th><th>句子</th><th>Tokens</th><th>相對英文</th></tr></thead>
+              <tbody>
+                <tr><td>English</td><td>I met a huge dog</td><td>5</td><td>1.0x</td></tr>
+                <tr><td>Spanish</td><td>Conoci a un perro enorme</td><td>8</td><td>1.6x</td></tr>
+                <tr><td>Chinese</td><td>中文對應句</td><td>11</td><td>2.2x</td></tr>
+                <tr><td>Japanese</td><td>日文對應句</td><td>11</td><td>2.2x</td></tr>
+                <tr><td>Russian</td><td>俄文對應句</td><td>14</td><td>2.8x</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>原因</h2>
+            <ul>
+              <li>BPE tokenizer 主要是以英文資料大量訓練。</li>
+              <li>常見英文單字常常只會對應一個 token。</li>
+              <li>CJK 文字雖然字數較少，但平均每個字的 token 可能更多。</li>
+              <li>非拉丁文字通常成本更高；音譯有時會有幫助。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>實務規則</h2>
+            <div class="quote">
+              Prompt 和指令請優先使用精簡英文。不要為了省 token 而翻成 CJK。
+            </div>
+            <p class="small">如果使用者用母語表達得更清楚，品質有時會比 token 成本更重要。但以最佳化來說，英文通常更有優勢。</p>
+          </section>
+
+          <section>
+            <h2>Lab 4：tokenizer 現實檢查</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>用實際 token 數，推翻或驗證語言直覺。</p>
+              <p><strong>請做：</strong>選一個 prompt，翻成你最擅長的非英文語言，然後在 tokenizer 工具裡比較 token 數。</p>
+              <p><strong>交付物：</strong>團隊語言指引：哪些情況必須用英文，哪些情況可接受使用母語。</p>
+              <p><strong>時間：</strong>20 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.3 部分</p>
+            <h2>Context 管理</h2>
+            <p>控制真正送出去的內容。最大的輸入節省通常來自結構面。</p>
+          </section>
+
+          <section>
+            <h2>常駐檔案每一輪都會產生成本</h2>
+            <p><code>.github/copilot-instructions.md</code>、<code>AGENTS.md</code>、<code>CLAUDE.md</code> 以及類似檔案，都可能成為持續存在的 context。</p>
+            <p class="small warning">如果相同內容出現在多個檔案，而不同工具又都會載入它們，你可能會重複付費兩次。</p>
+          </section>
+
+          <section>
+            <h2>指令壓縮範例</h2>
+            <pre><code class="language-text">精簡像原始人。技術內容要精確。只讓廢話消失。
+刪掉：冠詞、贅詞（just/really/basically）、客套語、保留語氣。
+片語可接受。用短同義詞。程式碼不要改。
+模式：[thing] [action] [reason]. [next step].</code></pre>
+            <p class="small">大約 50 個 token，但會在每次互動都被載入。</p>
+          </section>
+
+          <section>
+            <h2>Context 衛生</h2>
+            <ul>
+              <li>關閉與當前任務無關的檔案。</li>
+              <li>讓檔案聚焦且小而精。</li>
+              <li>忽略 build 輸出、vendor 目錄、產生檔。</li>
+              <li>在 Business／Enterprise 使用 Content Exclusion 處理敏感路徑。</li>
+              <li>換主題後開新對話。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>使用範圍化指令</h2>
+            <pre><code class="language-markdown">---
+applyTo: "src/api/**/*.ts"
+---
+API 慣例：
+- Routes 放在 src/api/routes/。Handler 保持精簡，邏輯放在 services/。
+- 用 zod 驗證。
+- 錯誤透過 Result&lt;T,E&gt;，不要直接 throw。</code></pre>
+            <p class="small">只有當相關檔案真的進入範圍時，才支付這些路徑專屬指引的成本。</p>
+          </section>
+
+          <section>
+            <h2>常駐 vs 條件式 vs 隨選</h2>
+            <table>
+              <thead><tr><th>範圍</th><th>用途</th><th>Token 姿態</th></tr></thead>
+              <tbody>
+                <tr><td>常駐</td><td>通用規則</td><td>保持極小</td></tr>
+                <tr><td>條件式</td><td>路徑／分層規則</td><td><code>applyTo</code></td></tr>
+                <tr><td>隨選</td><td>審查清單、版本發佈說明</td><td>只在呼叫時載入</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>快取友善行為</h2>
+            <ul>
+              <li>把穩定的 context 放在最上方。</li>
+              <li>不要一直頻繁改動指令檔。</li>
+              <li>用已儲存的片段，避免重貼大量 context。</li>
+              <li>當歷史內容過期時，先摘要再重開對話。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>企業版提醒：Content Exclusion</h2>
+            <div class="card enterprise">
+              <h3>客戶端動作</h3>
+              <p>為敏感檔案、產生的 bundle、大型資料檔，以及受規範的路徑設定 Content Exclusion。</p>
+              <p><strong>重要：</strong>先把它視為隱私／政策控制，其次才是節省 token 的附帶效果。請以官方文件確認目前支援面。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 5：context 稽核</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>找出哪些常駐 context 應該改成範圍化或隨選。</p>
+              <p><strong>請做：</strong>檢查 repo 指令、AGENTS／CLAUDE 檔案、開啟的分頁、產生檔、MCP 設定。</p>
+              <p><strong>交付物：</strong>三欄清單：保留常駐、移到 <code>applyTo</code>、移成隨選／刪除。</p>
+              <p><strong>時間：</strong>30 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.4 部分</p>
+            <h2>輸出控制</h2>
+            <p>告訴模型哪些話不用說。每個 token 的 ROI 在這裡最高。</p>
+          </section>
+
+          <section>
+            <h2>預設一句話</h2>
+            <pre><code class="language-text">Code only, no explanation.</code></pre>
+            <p>最適合生成任務，而且團隊已知道想要什麼改動時使用。</p>
+          </section>
+
+          <section>
+            <h2>格式限制</h2>
+            <table>
+              <thead><tr><th>指令</th><th>適用時機</th></tr></thead>
+              <tbody>
+                <tr><td>用一句話回答</td><td>快速決策或說明</td></tr>
+                <tr><td>最多 3 個 bullet</td><td>方便掃讀的摘要</td></tr>
+                <tr><td>回覆為 JSON</td><td>機器可讀的擷取結果</td></tr>
+                <tr><td>先回答 yes/no，再用一行說明原因</td><td>審查關卡</td></tr>
+                <tr><td>只顯示 diff</td><td>Patch 檢視</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>專案預設</h2>
+            <pre><code class="language-text">保持精簡。除非被要求，否則不要解釋。
+生成任務只輸出程式碼。
+優先用條列，不要寫段落。</code></pre>
+            <p class="small">若是學習、除錯或教學情境，可覆寫：明確要求提供說明即可。</p>
+          </section>
+
+          <section>
+            <h2>Lab 6：輸出 A/B</h2>
+            <div class="card lab">
+              <h3>試試這個 vs 那個</h3>
+              <pre><code class="language-text">A: Add input validation to processOrder().
+
+B: Add input validation to processOrder().
+Code only. No explanation. Minimal diff.</code></pre>
+              <p><strong>量測：</strong>回應長度、解釋所花的 token、diff 的實用性。</p>
+              <p><strong>時間：</strong>15 分鐘。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 7：強制格式</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>練習要求有界限的輸出。</p>
+              <p><strong>Prompts：</strong>「最多 3 個 bullet」、「只要表格」、「只要 JSON」、「單行結論 + 風險」。</p>
+              <p><strong>交付物：</strong>團隊常用 Copilot 輸出片段庫。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.5 部分</p>
+            <h2>工作流程最佳化</h2>
+            <p>先選對互動形態，再來優化措辭——形態選對，省的更多。</p>
+          </section>
+
+          <section>
+            <h2>Commit 與 PR 文字很重要</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>Commit</h3>
+                <p><code>feat: add password reset via settings page</code></p>
+                <p>只有在「為什麼」不明顯時才加 body。</p>
+              </div>
+              <div class="card">
+                <h3>Review</h3>
+                <p><code>L42: bug: user can be null. Add guard before .email.</code></p>
+                <p>一行、可執行、帶嚴重度標記。</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Ask vs Edit vs Agent</h2>
+            <table>
+              <thead><tr><th>任務</th><th>模式</th><th>原因</th></tr></thead>
+              <tbody>
+                <tr><td>這個 function 是做什麼的？</td><td>Ask</td><td>只需一次呼叫</td></tr>
+                <tr><td>語法問題</td><td>Ask</td><td>不需工具</td></tr>
+                <tr><td>單檔微調</td><td>Edit</td><td>目標明確</td></tr>
+                <tr><td>多檔重構</td><td>Agent</td><td>需要工具</td></tr>
+                <tr><td>Issue-to-PR</td><td>Coding Agent</td><td>自動化工作流程</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Auto 模型預設</h2>
+            <p>Auto 是不錯的基線：使用受支援的 Auto pool，會遵守 org policy，且依文件說明，符合資格的付費方案 Chat 使用可能有折扣。</p>
+            <p class="warning">Auto 不代表「會自動升級到所有 premium 模型」。釘選 premium 要有意識地進行。</p>
+          </section>
+
+          <section>
+            <h2>模型變更時重新調整 prompt</h2>
+            <pre><code class="language-text">目標模型：GPT-5.5。
+指南：&lt;official prompting guide URL&gt;
+檔案：.github/copilot-instructions.md、.github/instructions/*.md
+依指南調整 prompt。保留行為。降低重工。
+只顯示 diff。</code></pre>
+          </section>
+
+          <section>
+            <h2>什麼情況不該壓縮</h2>
+            <ul>
+              <li>安全警告。</li>
+              <li>不可逆操作。</li>
+              <li>Onboarding 與教學。</li>
+              <li>法規／合規文字。</li>
+              <li>片語寫法會增加歧義的複雜指令。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>用使用指導完成閉環</h2>
+            <div class="grid">
+              <div class="card">
+                <h3><code>/chronicle</code></h3>
+                <p>Copilot CLI 的 session 歷史。若持續出現同樣混亂，可用 <code>/chronicle improve</code>。</p>
+              </div>
+              <div class="card">
+                <h3>AI Engineering Coach</h3>
+                <p>VS Code 本機 extension。可找出反模式、context 健康狀況與技能使用機會。</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 8：模式分流演練</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>不要再把一次性工作都丟進 Agent Mode。</p>
+              <p><strong>請做：</strong>把 20 個範例任務分類成 Ask／Edit／Agent／Coding Agent，並說明理由。</p>
+              <p><strong>交付物：</strong>團隊模式分流速查表。</p>
+              <p><strong>時間：</strong>20 分鐘。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 9：模型分流演練</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>避免把昂貴模型預設釘選在整天工作流中。</p>
+              <p><strong>請做：</strong>把任務分配到 Auto、included／較低成本、standard、premium。如果支援，也請納入 reasoning-effort 的選擇。</p>
+              <p><strong>交付物：</strong>模型升級規則。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.6 部分</p>
+            <h2>常駐 context 問題</h2>
+            <p>更多 context 可能讓 agent 表現更差，也更昂貴。</p>
+          </section>
+
+          <section>
+            <h2>研究訊號</h2>
+            <table>
+              <thead><tr><th>發現</th><th>觀察到的影響</th></tr></thead>
+              <tbody>
+                <tr><td>LLM 產生的 context 檔案</td><td>在 8 種設定中的 5 種造成負面影響</td></tr>
+                <tr><td>平均正確率</td><td>下降約 2%</td></tr>
+                <tr><td>Token 成本</td><td>增加 20-23%</td></tr>
+                <tr><td>推理開銷</td><td>在引用設定中增加約 22%</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>為什麼 context 會有害</h2>
+            <div class="grid">
+              <div class="card"><h3>冗餘稅</h3><p>重複 agent 其實可以自己發現的事實。</p></div>
+              <div class="card"><h3>注意力稅</h3><p>重要規則埋在中間而被忽略。</p></div>
+              <div class="card"><h3>錨定陷阱</h3><p>過時的工具指引會過度影響 agent。</p></div>
+              <div class="card"><h3>訊號／雜訊問題</h3><p>例行資訊稀釋了真正的地雷。</p></div>
+            </div>
+          </section>
+
+          <section>
+            <h2>只保留地雷</h2>
+            <table>
+              <thead><tr><th>保留</th><th>刪除</th></tr></thead>
+              <tbody>
+                <tr><td>用 <code>uv</code> 不要用 <code>pip</code></td><td>這是一個 Python 專案</td></tr>
+                <tr><td>DB migration 必須依序執行</td><td>我們使用 PostgreSQL</td></tr>
+                <tr><td>不要重構 auth 模組；稽核尚未完成</td><td>我們使用 JWT auth</td></tr>
+                <tr><td>部署需要 VPN</td><td>Main branch 有保護</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Bug 追蹤器模型</h2>
+            <pre><code class="language-text">一開始幾乎留空。
+Agent 在某處跌倒 -> 補上一行。
+根因修好 -> 刪掉那一行。</code></pre>
+            <p>指令檔應該會長、也會縮，不要像 wiki 一樣只會一直累積。</p>
+          </section>
+
+          <section>
+            <h2>Lab 10：地雷修剪</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>在不犧牲正確性的前提下縮減 context。</p>
+              <p><strong>請做：</strong>把每條指令標記為可發現、風格、地雷、過時、重複。除了真正的常駐地雷外，其餘全部刪除或範圍化。</p>
+              <p><strong>交付物：</strong>最多 10 行的指令檔草稿。</p>
+              <p><strong>時間：</strong>35 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 2.7 部分</p>
+            <h2>MCP 與工具成本</h2>
+            <p>工具 schema 是隱藏的 token 稅。</p>
+          </section>
+
+          <section>
+            <h2>先量測</h2>
+            <pre><code class="language-text">/context
+
+System/Tools: MCPs + instructions + system prompt
+Messages: conversation history
+Free Space: 剩餘 context 空間</code></pre>
+            <p class="small">在 VS Code 中，可先粗估：啟用中的 MCP servers × 工具數 × 約 200 tokens／tool。</p>
+          </section>
+
+          <section>
+            <h2>每個工具都會消耗 token</h2>
+            <table>
+              <thead><tr><th>元件</th><th>約略成本</th></tr></thead>
+              <tbody>
+                <tr><td>名稱 + 描述</td><td>20-50 tokens</td></tr>
+                <tr><td>簡單參數 schema</td><td>30-80 tokens</td></tr>
+                <tr><td>複雜參數 schema</td><td>100-300 tokens</td></tr>
+                <tr><td>每個工具總計</td><td>100-500 tokens</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>乘法問題</h2>
+            <pre><code class="language-text">10 個 MCP servers
+x 每個 5 個工具
+x 每個工具 200 tokens
+= 每一步 10,000 tokens
+
+15 個 agent 步驟 = 150,000 個 schema tokens</code></pre>
+          </section>
+
+          <section>
+            <h2>稽核規則</h2>
+            <ul>
+              <li>停用目前不需要的 server。</li>
+              <li>用 workspace 級設定，不要全域全開。</li>
+              <li>優先使用內建工具，不要重複啟用檔案系統類 MCP。</li>
+              <li>偶爾才需要的能力，優先用 skills。</li>
+              <li>若支援，請按 namespace／mode 縮小大型外掛範圍。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>工具輸出壓縮</h2>
+            <div class="card">
+              <h3>RTK</h3>
+              <p>CLI proxy 會在 agent 讀取前先過濾吵雜的 shell 輸出：測試、git diff、grep、logs、檔案清單。</p>
+              <pre><code class="language-bash">rtk init --copilot</code></pre>
+            </div>
+          </section>
+
+          <section>
+            <h2>Azure MCP 案例模式</h2>
+            <p>一個大型外掛就可能主導整個 System/Tools 預算。</p>
+            <pre><code class="language-bash">--namespace appservice --namespace cosmos --namespace keyvault --namespace storage</code></pre>
+            <p class="small">依服務／角色縮小範圍。除非真的需要，否則避免「all tools」模式。</p>
+          </section>
+
+          <section>
+            <h2>Lab 11：MCP 稽核</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>移除隱藏的 schema 開銷。</p>
+              <p><strong>請做：</strong>盤點已啟用的 MCP servers、工具數量、global vs workspace 範圍、負責人、使用頻率。</p>
+              <p><strong>交付物：</strong>保留／停用／範圍化表格 + 重啟計畫。</p>
+              <p><strong>時間：</strong>30 分鐘。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>企業版實驗：工具政策</h2>
+            <div class="card enterprise">
+              <h3>客戶端動作</h3>
+              <p>依 persona 定義核准的 MCP servers：developer、data、platform、security、support。</p>
+              <p><strong>交付物：</strong>各團隊預設 MCP profile + 大型外掛的例外流程。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 3 部分</p>
+            <h2>比較與資料</h2>
+            <p>用數據找出投入產出比最高的習慣，再決定先做哪個。</p>
+          </section>
+
+          <section>
+            <h2>同一任務，不同成本</h2>
+            <table>
+              <thead><tr><th>技巧</th><th>Prompt</th><th>Tokens</th></tr></thead>
+              <tbody>
+                <tr><td>Verbose</td><td>Please add comprehensive error handling...</td><td>~40</td></tr>
+                <tr><td>Caveman lite</td><td>Add error handling. Cover null, types, network.</td><td>~16</td></tr>
+                <tr><td>Caveman full</td><td>Error handling. Cover: null, bad type, net error.</td><td>~12</td></tr>
+                <tr><td>Ultra</td><td>Error handling: null/bad-type/net-err.</td><td>~7</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>最大贏家</h2>
+            <ol>
+              <li>原始人寫法 + 精準 prompt。</li>
+              <li>只回程式碼／限制輸出格式。</li>
+              <li>縮小常駐 context。</li>
+              <li>簡單問題用 Ask Mode。</li>
+              <li>稽核 MCP servers。</li>
+              <li>模型變更後重新調整 prompt。</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>品質曲線</h2>
+            <pre><code class="language-text">節省：  lite ---- full ---- ultra ---- extreme
+風險：  低  ---- 低  ---- 中  --- 高</code></pre>
+            <p class="accent">甜蜜點：full caveman。對技術使用者來說，回報最高，風險幾乎可忽略。</p>
+          </section>
+
+          <section>
+            <h2>Lab 12：技術優先排序</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>依影響、成本、風險挑選變更。</p>
+              <p><strong>請做：</strong>為每項技巧在 impact、effort、adoption friction、governance need 上各打 1-5 分。</p>
+              <p><strong>交付物：</strong>團隊前 5 名，以及「不要採用」清單。</p>
+              <p><strong>時間：</strong>25 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 4 部分</p>
+            <h2>實務設定</h2>
+            <p>把技巧變成 repo 與團隊的預設。</p>
+          </section>
+
+          <section>
+            <h2>Repo 設定步驟</h2>
+            <ol>
+              <li>建立壓縮版 <code>.github/copilot-instructions.md</code>。</li>
+              <li>加入壓縮後的專案專屬規則。</li>
+              <li>用 <code>applyTo</code> 拆出路徑專屬指引。</li>
+              <li>預設使用 Auto；只有在有理由時才釘選。</li>
+              <li>為 Coding Agent 加上 <code>copilot-setup-steps.yml</code>。</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>起始指令範本</h2>
+            <pre><code class="language-text">精簡像原始人。技術內容要精確。只讓廢話消失。
+刪掉：冠詞、贅詞、客套語、保留語氣。
+片語可接受。用短同義詞。程式碼不要改。
+生成任務只輸出程式碼。除非被要求，否則不要解釋。
+盡量減少工具呼叫。相關讀取／編輯要批次處理。</code></pre>
+          </section>
+
+          <section>
+            <h2>Coding Agent 設定</h2>
+            <pre><code class="language-yaml"># .github/copilot-setup-steps.yml
+steps:
+  - name: 安裝相依套件
+    run: npm ci
+  - name: 建置
+    run: npm run build</code></pre>
+            <p class="small">避免靠 trial and error 來摸索，能節省 agent 步驟。</p>
+          </section>
+
+          <section>
+            <h2>精準 issue 範本</h2>
+            <pre><code class="language-text">錯誤：當 email 包含 "+" 時，登入失敗。
+檔案：src/auth/login.ts，validateEmail() L42。
+修正：呼叫 OAuth provider 前先對 email 做 URL encode。
+測試：新增 user+tag@example.com 案例。
+完成：目標測試通過。</code></pre>
+          </section>
+
+          <section>
+            <h2>用 4 週建立習慣</h2>
+            <table>
+              <thead><tr><th>週次</th><th>習慣</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>壓縮指令 + 問題改用 Ask Mode</td></tr>
+                <tr><td>2</td><td>Caveman-lite prompts</td></tr>
+                <tr><td>3</td><td>Caveman-full + 結構化格式</td></tr>
+                <tr><td>4</td><td>只回程式碼的預設 + 把可重用片段放在常駐 context 之外</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Agent 模式控制</h2>
+            <pre><code class="language-json">{
+  "chat.agent.maxRequests": 10,
+  "github.copilot.chat.agent.model": "auto"
+}</code></pre>
+            <p class="small">要小心限制暴衝 session。只有任務真的需要時才往上調。</p>
+          </section>
+
+          <section>
+            <h2>Lab 13：repo 實作</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>建立可直接套用到 repo 的 token 最佳化 PR 草稿。</p>
+              <p><strong>請做：</strong>起草 <code>copilot-instructions.md</code>、一個範圍化指令檔、一個 Coding Agent setup step、一個 issue template 片段。</p>
+              <p><strong>交付物：</strong>branch 或 patch 提案。</p>
+              <p><strong>時間：</strong>45 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 4.2 部分</p>
+            <h2>模型選擇與定價</h2>
+            <p>把 Copilot 文件、UBB 架構，以及供應商 token 定價分開看。</p>
+          </section>
+
+          <section>
+            <h2>三種定價視角</h2>
+            <table>
+              <thead><tr><th>視角</th><th>回答什麼</th></tr></thead>
+              <tbody>
+                <tr><td>GitHub Copilot 文件</td><td>方案可用性、模型存取、Auto 行為、已公開訊號</td></tr>
+                <tr><td>UBB 架構</td><td>切換後的 AI-credit 預算與治理</td></tr>
+                <tr><td>供應商 API 定價</td><td>輸入 vs 輸出的成本直覺，不是 Copilot 計費表</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Auto：實務上的意義</h2>
+            <ul>
+              <li>會從受支援的 Auto pool 中挑選。</li>
+              <li>受方案與 org policy 限制。</li>
+              <li>依健康度與效能決定。</li>
+              <li>符合資格的付費方案 Chat 使用有折扣。</li>
+              <li>不會自動升級到所有 premium 模型。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>推理 effort</h2>
+            <table>
+              <thead><tr><th>Effort</th><th>適用情境</th></tr></thead>
+              <tbody>
+                <tr><td>Low</td><td>高流量的簡單 chat／分類</td></tr>
+                <tr><td>Medium</td><td>一般程式撰寫與工具密集型工作（若支援）</td></tr>
+                <tr><td>High/max</td><td>架構、安全、全新拆解問題</td></tr>
+              </tbody>
+            </table>
+            <p class="small warning">只在有提供此控制的模型上使用。</p>
+          </section>
+
+          <section>
+            <h2>反模式</h2>
+            <ul>
+              <li>整天都把 premium model 釘住。</li>
+              <li>以為任務變難時 Auto 會自動跳到 premium。</li>
+              <li>把供應商 API 定價和 Copilot 計費混為一談。</li>
+              <li>一開始就對整個 org 啟用所有 premium 模型。</li>
+              <li>忽略方案／模型可用性。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Lab 14：模型升級政策</h2>
+            <div class="card enterprise">
+              <h3>客戶端動作</h3>
+              <p>定義使用者何時可以釘選 premium 模型，以及何時必須使用 Auto。</p>
+              <p><strong>請做：</strong>把工作流程對應到預設模型路徑、升級觸發條件、預期價值、回滾訊號。</p>
+              <p><strong>交付物：</strong>一頁式模型政策草稿。</p>
+              <p><strong>時間：</strong>30 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">第 4.3 部分</p>
+            <h2>企業治理</h2>
+            <p>管理控制負責封頂支出；prompt 習慣負責降低上限內的浪費。</p>
+          </section>
+
+          <section>
+            <h2>支出控制桿</h2>
+            <ol>
+              <li>預算上限。</li>
+              <li>使用者層級 AI-credit 預算。</li>
+              <li>模型可用性政策。</li>
+            </ol>
+            <p class="small">Prompt 壓縮不能封頂支出；它只是降低已允許使用範圍內的浪費。</p>
+          </section>
+
+          <section>
+            <h2>先設定預算</h2>
+            <div class="card enterprise">
+              <h3>客戶端動作</h3>
+              <p>設定 enterprise／org／cost center 預算。提早開啟警示。待報表可信後，再啟用 stop-usage。每月檢討。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>使用者層級收緊</h2>
+            <ul>
+              <li>基線使用者：較低 AI-credit 預算。</li>
+              <li>重度使用者：因工作需要給較高預算。</li>
+              <li><code>$0</code> 預算：無法使用計量型功能。</li>
+              <li>每月檢查，將未使用的配額下調。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>啟用前先檢視模型</h2>
+            <table>
+              <thead><tr><th>問題</th><th>決策</th></tr></thead>
+              <tbody>
+                <tr><td>哪些工作流程需要 premium？</td><td>精準啟用</td></tr>
+                <tr><td>哪些團隊能創造可衡量價值？</td><td>配置較高預算</td></tr>
+                <tr><td>哪些使用者可以留在 Auto？</td><td>讓預設路徑維持低成本</td></tr>
+                <tr><td>回滾訊號是什麼？</td><td>使用量上升、價值持平</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>指令範圍治理</h2>
+            <ul>
+              <li>Org 指令：較廣泛的 GitHub.com 政策與 review 提醒。</li>
+              <li>Repo 指令：IDE 工作流程預設與程式規則。</li>
+              <li>路徑專屬指令：只有在局部 context 值得時才放。</li>
+              <li>不要假設 org 指令會套用到所有地方；請查官方文件。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>分開的 org：只作為備案</h2>
+            <p>當既有組織結構本來就對應不同模型政策或計費邊界時，才比較有用。</p>
+            <p class="warning">成本：管理負擔、授權複雜度、使用者分散、SCIM／cost-center 限制。</p>
+          </section>
+
+          <section>
+            <h2>衡量正確的事情</h2>
+            <ol>
+              <li>哪些團隊超出基線？</li>
+              <li>哪些使用者驅動了 AI-credit 使用量？</li>
+              <li>哪些模型真的改善成果？</li>
+              <li>哪些 agent 工作流程花了錢卻沒有交付價值？</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>6 月 1 日切換檢查清單</h2>
+            <ol>
+              <li>從 request 計數轉成 AI-credit 預算。</li>
+              <li>決定採用 pooled 還是 user-level 預算。</li>
+              <li>在 premium 變成直接支出之前，先檢視模型可用性。</li>
+              <li>提醒團隊：completions／next edits 仍不在 AI-credit 計費範圍內。</li>
+              <li>先觀察長對話與 agent 工作流程。</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>Lab 15：預算推行</h2>
+            <div class="card enterprise">
+              <h3>客戶端動作</h3>
+              <p>為一個 enterprise 帳戶設計預算推行方案。</p>
+              <p><strong>請做：</strong>選定試點 org、cost center、基線預算、警示門檻、stop-usage 規則、使用者例外。</p>
+              <p><strong>交付物：</strong>預算營運模型。</p>
+              <p><strong>時間：</strong>35 分鐘。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lab 16：治理桌上演練</h2>
+            <div class="card enterprise">
+              <h3>情境</h3>
+              <p>某團隊的 agent session 讓 AI-credit 使用量暴增 4 倍，但交付成果沒有變化。</p>
+              <p><strong>請決定：</strong>預算動作、模型政策動作、指令／context 動作、MCP 稽核動作、溝通計畫。</p>
+              <p><strong>時間：</strong>25 分鐘。</p>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="kicker">收尾統整</p>
+            <h2>30 天 token 最佳化計畫</h2>
+            <p>把工作坊所學轉化成可交付的客戶推行方案。</p>
+          </section>
+
+          <section>
+            <h2>逐週推行</h2>
+            <table>
+              <thead><tr><th>週次</th><th>團隊動作</th><th>管理端動作</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>輸出預設 + Ask Mode</td><td>建立使用基線</td></tr>
+                <tr><td>2</td><td>修剪指令 + 範圍化規則</td><td>預算試點</td></tr>
+                <tr><td>3</td><td>MCP 稽核 + 模型分流</td><td>檢視模型存取政策</td></tr>
+                <tr><td>4</td><td>Agent issue 範本 + setup steps</td><td>建立每月報告節奏</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>收尾統整實作</h2>
+            <div class="card lab">
+              <h3>目標</h3>
+              <p>建立客戶專屬行動計畫。</p>
+              <p><strong>章節：</strong>repo 變更、使用者習慣、MCP／工具政策、模型政策、預算、報告、負責人、到期日。</p>
+              <p><strong>交付物：</strong>可直接交給客戶 sponsor 的 30 天計畫。</p>
+              <p><strong>時間：</strong>30 分鐘。</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>最終檢查清單</h2>
+            <div class="grid">
+              <div class="card checkpoint">
+                <h3>開發者</h3>
+                <ul>
+                  <li>預設只回程式碼</li>
+                  <li>Ask/Edit/Agent 分流</li>
+                  <li>精簡 prompts</li>
+                  <li>適時開新 session</li>
+                </ul>
+              </div>
+              <div class="card checkpoint">
+                <h3>程式碼庫</h3>
+                <ul>
+                  <li>極小的常駐指令</li>
+                  <li>範圍化的 <code>applyTo</code> 檔案</li>
+                  <li>Coding Agent setup steps</li>
+                  <li>精準的 issue 範本</li>
+                </ul>
+              </div>
+              <div class="card checkpoint">
+                <h3>平台</h3>
+                <ul>
+                  <li>MCP profiles</li>
+                  <li>Content Exclusion</li>
+                  <li>模型存取政策</li>
+                  <li>RTK／CLI 工具輸出策略</li>
+                </ul>
+              </div>
+              <div class="card checkpoint">
+                <h3>企業</h3>
+                <ul>
+                  <li>預算</li>
+                  <li>使用者層級上限</li>
+                  <li>使用量報表</li>
+                  <li>每月檢討</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>結語</h2>
+            <div class="quote">
+              先從便宜的預設開始。Premium 存取採例外制。先量測，再擴張。
+            </div>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js" integrity="sha384-rZIIVPQD/+U9IL3I62KrBHuVtPgYv+xdXvER5RBiVQRszJEJfLKRrcrZwI7fhcHT" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js" integrity="sha384-zaxVZlTGBPySa6IWC61g+1BgKaWp4jQ7Qcm/TrxRPMAziaAmE0ZbNGwRAGI2vmkk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/markdown/markdown.js" integrity="sha384-ee/QmFMUwC+YUuswSDzliKj27Anp3rSblE1ujBcPKyrzwG15Daa1GL6JcNbPg/oG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js" integrity="sha384-RStjjmink02UsZt/lqz6BNqXt/+nevOv97+PJ6CB6e7Sn5mzmf+qPdFtF59M9d4V" crossorigin="anonymous"></script>
+    <script>
+      const presenterNotes = {
+        "工作坊成果": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>先設定期待：這是一套實務操作指引，不是理論。參與者應帶著 repo 變更、個人習慣，以及管理端推行決策離開。</p>
+          <p>請大家在所有實驗中都帶著一個真實的 repo／客戶情境來思考。</p>
+        `,
+        "重要前提": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>直接說清楚：這是社群／實務指南，不是 GitHub／Microsoft 官方政策。計費與管理控制請以 docs.github.com 為準。</p>
+          <p>這樣能維持在企業客戶面前的可信度。</p>
+        `,
+        "8 小時議程": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>說明節奏：短概念區塊、實驗、分享。實驗要嚴格控時；沒做完的部分就納入後面的行動計畫。</p>
+          <p>把治理安排在最後四分之一，等實作者先理解成本機制之後再談。</p>
+        `,
+        "導覽方式": `
+          <p><strong>時間：</strong>1 分鐘。</p>
+          <p>只有在瀏覽器 live demo 時才示範控制方式。講者畫面可看備註；如果觀眾想跳章節，可用總覽模式。</p>
+        `,
+        "現在立刻要做的 11 件事": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>把這頁當成 executive summary。若客戶只能實作一頁，就實作這一頁。</p>
+          <p>強調順序：輸出、常駐 context、模式／模型／工具分流。</p>
+        `,
+        "最快見效的做法": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>說明這些都是幾乎零設定成本的習慣。輸出控制排第一，因為冗長回答會反覆產生成本，而且很容易立刻停止。</p>
+          <p>詢問現場哪些已經在做；把缺口記下來，留到後面實驗處理。</p>
+        `,
+        "更多快速見效做法": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>把日常使用者習慣和平台控制分開說明。Chronicle 與 CodeAct 是 Copilot CLI 專屬，不要過度包裝成所有 Copilot Chat 通用功能。</p>
+        `,
+        "優先順序堆疊": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>把這當成整天反覆使用的心智模型。先管輸出，因為它影響每次回應；再管常駐 context，因為它影響每次 request；模式／模型／工具分流則改變任務形態；治理則負責封頂支出。</p>
+        `,
+        "Lab 0：建立你的習慣基準": `
+          <p><strong>時間：</strong>10 分鐘實驗 + 5 分鐘分享。</p>
+          <p>讓參與者快速自評，不要糾結精確 token 數。目標是找出目前摩擦最大的習慣。</p>
+          <p>蒐集 2-3 個例子，後面實驗可重用。</p>
+        `,
+        "為什麼 token 很重要": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>從技巧過渡到機制。只要大家理解 context window 裡實際進了什麼，後面的建議就會變得直覺。</p>
+        `,
+        "Token 是子詞": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>講簡單就好：token 不是單字。常見英文壓縮效果很好；禮貌性贅詞也有成本，卻沒有任務價值。</p>
+          <p>除非觀眾主動提問，否則不要深入 tokenizer 內部細節。</p>
+        `,
+        "成本模型": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>說明三個類別。供應商定價可以用來說明輸出／輸入的成本差異，但除非官方文件有公開，不要聲稱 Copilot 有精確的公開每 token 計價表。</p>
+          <p>核心結論：輸出控制的價值特別高。</p>
+        `,
+        "輸入比你的 prompt 更大": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>挑戰常見誤解：你打的 prompt 很小，真正大的通常是隱藏 context——檔案、歷史、指令、工具。</p>
+          <p>可以問一句：「你今天送出了哪些其實不想送的 context？」</p>
+        `,
+        "Coding Agent 放大效應": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>一個看得到的任務，背後可能是很多次內部呼叫。每一步都要支付基線 context，還會累積工具輸出。</p>
+          <p>這也說明了為什麼後面要強調精準 issue 描述與 setup steps。</p>
+        `,
+        "Lab 1：token 結構解析": `
+          <p><strong>時間：</strong>15 分鐘實驗 + 5 分鐘分享。</p>
+          <p>請大家拿最近一次真實 Copilot 任務來做。要求他們辨認隱藏的 context 來源，並分清楚哪些是使用者輸入、哪些是自動帶入。</p>
+        `,
+        "Prompt 壓縮": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>先立規則：壓縮不是把內容變笨。技術內容要保持精確，只有廢話要消失。</p>
+        `,
+        "原始人寫法": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>把模式大聲念出來。讓大家看到真正重要的是檔案、函式、限制條件與完成條件，而不是文法。</p>
+          <p>提醒：不要隨便縮寫自己都還沒定義過的專案術語。</p>
+        `,
+        "前後對照": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>問觀眾，如果拿來當任務，他們比較想收到哪一種版本。大多數人會選原始人版，因為行動更清楚。</p>
+        `,
+        "壓縮等級": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>建議內部開發預設用 full。客戶面或 onboarding 用 lite。只有在領域高度共識、歧義很低時才用 ultra。</p>
+        `,
+        "結構化勝過散文式描述": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>強調結構化不只節省 token，也能提升品質，因為它會暴露缺漏需求：狀態碼、驗證欄位、持久化。</p>
+        `,
+        "以程式碼為中心的 prompting": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>對開發者來說，常可用函式簽章、TODO，或「像 X，但 Y」這類參照，更精簡地表達意圖。</p>
+        `,
+        "把護欄寫成不變條件": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>宣告式不變條件更容易被模型遵守，也更容易讓人類審查。</p>
+          <p>指令檔也很適合採用這種寫法。</p>
+        `,
+        "Lab 2：prompt 壓縮梯度": `
+          <p><strong>時間：</strong>20 分鐘實驗 + 5 分鐘分享。</p>
+          <p>兩人一組。一個人改寫，另一個檢查有沒有丟失原意。最好的 prompt 是最短且仍然沒有歧義的那個。</p>
+        `,
+        "Lab 3：prompt A/B": `
+          <p><strong>時間：</strong>20 分鐘。</p>
+          <p>依現場環境可在 Ask／Edit／Agent 中操作。比較的不只是輸出，也要看澄清次數與觸碰的檔案數。</p>
+        `,
+        "語言比較": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>把這段當成迷思破解。字數較少，不代表 token 較少。</p>
+        `,
+        "CJK 假設失靈": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>用表格展示反直覺結果。CJK 對人類讀者可能更密集，但 tokenizer 的經濟性不一樣。</p>
+        `,
+        "原因": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>說明 tokenizer 訓練偏重英文。不要把這講成語言品質高低，這只是壓縮機制問題。</p>
+        `,
+        "實務規則": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>若目標是 token 最佳化，請用精簡英文。若用母語能讓需求清楚很多，品質就可能比節省更重要。</p>
+        `,
+        "Lab 4：tokenizer 現實檢查": `
+          <p><strong>時間：</strong>20 分鐘。</p>
+          <p>請多語使用者拿真實 prompt 來測。蒐集令人意外的結果，最後產出的是團隊本地政策，而不是普世道德結論。</p>
+        `,
+        "Context 管理": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>從打字的 prompt 轉向結構性輸入。最大的輸入節省通常來自常駐載入或自動帶入的內容。</p>
+        `,
+        "常駐檔案每一輪都會產生成本": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>說明不同慣例檔案可能同時存在，但成本問題相同：常駐文字會成為重複支付的基線。</p>
+          <p>如果相同指引出現在多個常駐檔案，應進行去重。</p>
+        `,
+        "指令壓縮範例": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>把這個當成具體目標。好的指令檔更像設定檔，不像 wiki。</p>
+        `,
+        "Context 衛生": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>強調那些看似普通的動作：關分頁、避開產生檔、忽略大型 artifact、重開過期 chat。</p>
+        `,
+        "使用範圍化指令": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>說明路徑範圍化的好處：在保留豐富指引的同時，不必為每次無關互動都付費。</p>
+          <p>很好的企業做法是：中央標準 + 極小 repo 核心 + 路徑專屬深度規則。</p>
+        `,
+        "常駐 vs 條件式 vs 隨選": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>問問大家現在哪些 checklist 放在哪裡。每月才會用一次的東西，不該在每個 prompt 都支付成本。</p>
+        `,
+        "快取友善行為": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>讓穩定前綴保持穩定。頻繁 churn context 會同時傷害速度與快取價值。</p>
+        `,
+        "企業版提醒：Content Exclusion": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>強調這是客戶端管理責任。第一優先是政策／隱私，token 節省是其次，而且還要看支援面。</p>
+          <p>具體動作：找出要排除的路徑，以及對應的負責人。</p>
+        `,
+        "Lab 5：context 稽核": `
+          <p><strong>時間：</strong>30 分鐘實驗 + 10 分鐘分享。</p>
+          <p>盡量用真實 repo。如果沒有 repo 存取，就用匿名化的指令範例。強迫大家做決策：保留、範圍化、隨選、刪除。</p>
+        `,
+        "輸出控制": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>把它定位為最高 ROI，因為最容易做，而且每次都會發生。它也能提高人類閱讀的訊號密度。</p>
+        `,
+        "預設一句話": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>請明講：這適合實作，不適合學習。若真的需要解釋，就明確要求，並接受其成本。</p>
+        `,
+        "格式限制": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>這些都是輸出預算。要和明確任務搭配，避免模型把 token 花在選擇輸出形式上。</p>
+        `,
+        "專案預設": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>建議把這種預設放進 repo 指令，適用於 IDE 工作流程。單靠 org 指令不一定能涵蓋所有介面。</p>
+        `,
+        "Lab 6：輸出 A/B": `
+          <p><strong>時間：</strong>15 分鐘。</p>
+          <p>請大家比較回應長度與實用性。不要只看最短，而要看最短且仍可接受的輸出。</p>
+        `,
+        "Lab 7：強制格式": `
+          <p><strong>時間：</strong>15 分鐘。</p>
+          <p>最後要整理出可重用片段：review verdict、除錯摘要、風險清單、migration checklist、test plan。</p>
+        `,
+        "工作流程最佳化": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>轉場重點：有時最大的節省不是把字寫短，而是改用不同工作流程。</p>
+        `,
+        "Commit 與 PR 文字很重要": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Agent 會讀 git 歷史和 review 留言。精簡、可執行的歷史紀錄，同時對人類和模型都有幫助。</p>
+        `,
+        "Ask vs Edit vs Agent": `
+          <p><strong>時間：</strong>6 分鐘。</p>
+          <p>把這段講得實際一點。Ask 最便宜，Edit 最聚焦，Agent 最強但也最貴。Coding Agent 則適合自動化的 issue-to-PR。</p>
+          <p>最常見失敗模式是：在 Agent Mode 裡給了模糊 prompt。</p>
+        `,
+        "Auto 模型預設": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Auto 應該是基線，premium 釘選應是明確例外。這能降低不小心開啟昂貴 session 的機率。</p>
+        `,
+        "模型變更時重新調整 prompt": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>模型升級就像依賴升級。應依官方 prompt guide 重新調整指令檔與 agent profile，然後再檢視 diff。</p>
+        `,
+        "什麼情況不該壓縮": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>壓縮不能犧牲安全性或法律清晰度。鼓勵團隊先標出哪些情境必須保留完整書面語。</p>
+        `,
+        "用使用指導完成閉環": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>Chronicle 可抓出 CLI 反覆混亂；AI Engineering Coach 可找出 VS Code 習慣問題。這些輸出要當作 review 建議，而不是自動化政策。</p>
+        `,
+        "Lab 8：模式分流演練": `
+          <p><strong>時間：</strong>20 分鐘。</p>
+          <p>可用情境卡。先讓大家投票選模式，再討論。把那些其實需要先澄清才能用 Agent 的邊界情境記錄下來。</p>
+        `,
+        "Lab 9：模型分流演練": `
+          <p><strong>時間：</strong>20 分鐘。</p>
+          <p>聚焦在決策規則，不要綁死在模型名稱。名稱會變，但分層不變：便宜／內含、standard、premium。</p>
+        `,
+        "常駐 context 問題": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>這一段有點反直覺。先讓觀眾有心理準備：更多 context 可能因為增加雜訊而降低準確率。</p>
+        `,
+        "研究訊號": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>不要過度延伸。這些資料是提醒大家警惕生成式 boilerplate，不是證明所有 context 檔都不好。</p>
+        `,
+        "為什麼 context 會有害": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>用這四個機制來診斷客戶 repo。大多數臃腫檔案通常同時踩中這四個問題。</p>
+        `,
+        "只保留地雷": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>很好用的引導問題是：「Agent 只靠讀程式碼能不能自己發現這件事？」如果可以，就刪掉或改成範圍化。</p>
+        `,
+        "Bug 追蹤器模型": `
+          <p><strong>時間：</strong>3 分鐘。</p>
+          <p>指令檔要有刪除紀律。模型在哪裡跌倒，就加一行；根因被修好後，就把那一行刪掉。</p>
+        `,
+        "Lab 10：地雷修剪": `
+          <p><strong>時間：</strong>35 分鐘。</p>
+          <p>強制設 10 行上限，讓大家被迫排序。如果團隊爭論，就把有爭議的規則移到範圍化／隨選區。</p>
+        `,
+        "MCP 與工具成本": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>介紹這個隱藏稅：就算沒用到工具，工具定義本身也會進入 context。</p>
+        `,
+        "先量測": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>在 CLI 中，/context 可以看到具體拆分。在 VS Code 中，在有等效遙測前，可先用 server／tool 數做粗估。</p>
+        `,
+        "每個工具都會消耗 token": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Schema token 包含描述與參數 JSON。複雜工具的成本往往比想像中高。</p>
+        `,
+        "乘法問題": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>在這裡停一下算數學。每一步的額外成本，乘上 agent 步數之後，很快就會變成六位數 token。</p>
+        `,
+        "稽核規則": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>實務上的企業做法是：依 persona 建立 MCP profile。開發者不應該全域啟用所有整合。</p>
+        `,
+        "工具輸出壓縮": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Schema 稽核是減少「載入什麼」；RTK 是減少「命令回傳什麼」。這是不同控制桿，但兩者都很好用。</p>
+          <p>如果客戶需要安全審查，也要提及外部工具的審查狀態。</p>
+        `,
+        "Azure MCP 案例模式": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>把這個當成大型外掛範圍化的範例。用 namespace／persona 比全開或全關更好。</p>
+        `,
+        "Lab 11：MCP 稽核": `
+          <p><strong>時間：</strong>30 分鐘。</p>
+          <p>讓管理員與開發者兩兩配對。開發者知道自己真的用什麼，管理員知道治理限制。</p>
+        `,
+        "企業版實驗：工具政策": `
+          <p><strong>時間：</strong>20 分鐘。</p>
+          <p>輸出要夠可操作：核准的預設 servers、要範圍化的大型外掛、例外流程、檢討節奏。</p>
+        `,
+        "比較與資料": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>把這一段當成技術巡禮後的決策檢查點。資料能幫助排定採用順序。</p>
+        `,
+        "同一任務，不同成本": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>從 verbose 到 full，品質通常都還維持得住；到了 ultra 才開始容易模糊。這支持 full-caveman 是最佳甜蜜點。</p>
+        `,
+        "最大贏家": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>請大家回頭對照 Lab 0 的基準，挑出最值得立刻採用的前兩項。</p>
+        `,
+        "品質曲線": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>壓縮不是線性的。前幾刀幾乎沒有代價；壓縮過頭才會顯著增加重工風險。</p>
+        `,
+        "Lab 12：技術優先排序": `
+          <p><strong>時間：</strong>25 分鐘。</p>
+          <p>用 impact／effort 矩陣來排。不要一次推所有技巧；客戶需要的是有順序的變更計畫。</p>
+        `,
+        "實務設定": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>現在把想法轉成 repo artifact 和可重複的團隊習慣。</p>
+        `,
+        "Repo 設定步驟": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>說明依賴順序：先有精簡的全域指令，再補範圍化深度，最後才加 Coding Agent setup。</p>
+        `,
+        "起始指令範本": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>鼓勵團隊先複製再客製。專案特有的地雷只要少量加入即可。</p>
+        `,
+        "Coding Agent 設定": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>事先安裝／建置可以省掉摸索步驟。Setup 應保持可重現且最小化。</p>
+        `,
+        "精準 issue 範本": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Issue 品質會直接控制 agent 的探索成本。好的 issue 描述更便宜，也更容易產出好 PR。</p>
+        `,
+        "用 4 週建立習慣": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>採用順序可以避免過載。先改預設，再改習慣，最後才上進階分流。</p>
+        `,
+        "Agent 模式控制": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Max requests 是安全護欄，不是萬靈丹。設太低會擋住本來合理的工作流。要依實際工作型態調整。</p>
+        `,
+        "Lab 13：repo 實作": `
+          <p><strong>時間：</strong>45 分鐘。</p>
+          <p>這是最適合實作者的實驗。如果沒有寫入權限，就產出 patch 文字或 PR checklist。</p>
+        `,
+        "模型選擇與定價": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>先重新校準精確度：模型建議很容易混淆不同計費概念。一定要拆開來講，避免對客戶做出錯誤說法。</p>
+        `,
+        "三種定價視角": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>Copilot 控制請看 GitHub 文件。治理邏輯用 UBB 架構。輸入／輸出的成本直覺則可以參考供應商 API 定價。</p>
+        `,
+        "Auto：實務上的意義": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>Auto 是便宜的預設路徑，不是神奇的 premium 自動升級。客戶要啟用或釘選 premium，必須是刻意決策。</p>
+        `,
+        "推理 effort": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>若模型有提供，effort 也是另一個成本旋鈕。用最低但足以完成任務的 effort 即可；高難度任務才值得拉高。</p>
+        `,
+        "反模式": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>可以問客戶：你們最常看到哪個反模式？通常是 premium 長時間釘選，以及過度寬鬆的啟用政策。</p>
+        `,
+        "Lab 14：模型升級政策": `
+          <p><strong>時間：</strong>30 分鐘。</p>
+          <p>政策一定要包含觸發條件與回滾條件。不能只寫「開發者想用就可以」；必須跟工作流程價值綁定。</p>
+        `,
+        "企業治理": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>從行為改變轉到管理控制。管理控制負責封頂支出；開發者習慣則負責降低上限內的浪費。</p>
+        `,
+        "支出控制桿": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>再重複一次：預算、使用者預算、模型可用性。Prompt 寫法不是支出上限機制。</p>
+        `,
+        "先設定預算": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>從試點和警示開始。只有在利害關係人信任報表且理解影響後，才啟用 stop-usage。</p>
+        `,
+        "使用者層級收緊": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>讓預算反映工作需求。提到 $0 時要講清楚：計量型功能會被擋住，但 completions／next edits 的細節仍請以官方文件為準。</p>
+        `,
+        "啟用前先檢視模型": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>Premium 存取要分階段開。先檢查輸出品質與使用量，再決定是否擴大。模型存取應綁定工作流程，而不是資歷。</p>
+        `,
+        "指令範圍治理": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>這裡有重要文件細節：org 指令不一定自動涵蓋所有 IDE 介面。Repo 指令才是 IDE 預設的主要承載點。</p>
+        `,
+        "分開的 org：只作為備案": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>不要把 org 拆分當成第一選項。只有在既有組織邊界本來就對應計費／政策邊界時，才值得這樣做。</p>
+        `,
+        "衡量正確的事情": `
+          <p><strong>時間：</strong>4 分鐘。</p>
+          <p>只有使用量而沒有成果，資訊是不完整的。請把 AI-credit 報表和交付指標一起看：PR、cycle time、缺陷、review 品質。</p>
+        `,
+        "6 月 1 日切換檢查清單": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>把這份清單客戶化。如果簡報當天需要精準日期或狀態，請再以官方文件確認。</p>
+        `,
+        "Lab 15：預算推行": `
+          <p><strong>時間：</strong>35 分鐘。</p>
+          <p>若客戶願意分享具體數字，就直接用；否則用相對層級：pilot、baseline、power user、blocked。</p>
+        `,
+        "Lab 16：治理桌上演練": `
+          <p><strong>時間：</strong>25 分鐘。</p>
+          <p>用 incident response 的方式來帶。先分清楚即時止血措施，再分清楚根因修正與對外溝通。</p>
+        `,
+        "30 天 token 最佳化計畫": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>Capstone 是把前面所有實驗收斂成推行方案。負責人與日期要明確。</p>
+        `,
+        "逐週推行": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>這可以作為預設計畫，再依客戶成熟度與管理準備度調整。</p>
+        `,
+        "收尾統整實作": `
+          <p><strong>時間：</strong>30 分鐘。</p>
+          <p>請團隊現場把計畫填完。每個工作流都要指定一位負責人：repo、users、platform、enterprise。</p>
+        `,
+        "最終檢查清單": `
+          <p><strong>時間：</strong>5 分鐘。</p>
+          <p>用它來檢查計畫是否完整。如果四個象限有一個是空的，表示客戶推行方案還有盲點。</p>
+        `,
+        "結語": `
+          <p><strong>時間：</strong>2 分鐘。</p>
+          <p>最後用這個原則收束：token 最佳化是治理加上習慣，不是一個一次性的 prompt 技巧。</p>
+        `
+      };
+
+      for (const section of document.querySelectorAll(".slides section")) {
+        if (section.querySelector("section")) continue;
+        if (section.querySelector(":scope > aside.notes")) continue;
+        const heading = section.querySelector("h1, h2");
+        const title = heading?.textContent.trim();
+        const notes = presenterNotes[title];
+        if (!notes) continue;
+        const aside = document.createElement("aside");
+        aside.className = "notes";
+        aside.innerHTML = notes;
+        section.appendChild(aside);
+      }
+
+      Reveal.initialize({
+        hash: true,
+        slideNumber: "c/t",
+        transition: "slide",
+        width: 1280,
+        height: 720,
+        margin: 0.06,
+        plugins: [RevealMarkdown, RevealNotes, RevealHighlight]
+      });
+    </script>
+  </body>
+</html>
