@@ -93,8 +93,36 @@ What actually reduces auto-included context (per-developer levers that work ever
 - Vendor directories
 - Data files (CSVs, JSON fixtures)
 - Archived documentation
+- Rich document formats (`.docx`, `.pdf`, `.pptx`, `.xlsx`, HTML exports, scanned images, audio/video transcripts)
 
 Every file that enters context costs tokens. Be intentional about what's open and what's referenced with `#file`.
+
+### Normalize non-text inputs to Markdown first
+
+When the source is a Word file, PDF, PowerPoint, spreadsheet, image, audio file, or exported HTML, do not paste the rich format directly into an AI workflow if you can avoid it. Convert it to clean Markdown first, then send the Markdown.
+
+Marc Bara calls this the **format tax** in [Your .docx Is Wasting 33% of Your AI Budget](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042): Word, PDF, and HTML carry font data, XML, page-positioning metadata, layout artifacts, embedded objects, and tag soup that models must process but rarely need. The article cites a concrete example where a 10-page report extracted from PDF used roughly 12,400 tokens, while the same content as clean Markdown used about 8,350 tokens — a 33% reduction with the same information. HTML exports can be even worse because semantic content gets wrapped in long tags, classes, IDs, and layout scaffolding.
+
+The rule: use Markdown as the **working format** for AI interaction, and treat Word/PDF/PowerPoint as delivery formats. Draft, review, summarize, chunk, and retrieve from Markdown. Generate `.docx` or `.pdf` at the end only when a client, regulator, or internal process needs that artifact.
+
+[Microsoft MarkItDown](https://github.com/microsoft/markitdown) is the practical bridge. It is a Python tool for converting files and office documents to Markdown for LLM and text-analysis pipelines. It preserves useful structure such as headings, lists, tables, links, and extracted metadata, while avoiding high-fidelity visual layout noise. Current converters include PDF, Word, PowerPoint, Excel, images with EXIF/OCR support, audio with transcription support, HTML, CSV/JSON/XML, ZIP contents, YouTube URLs, EPUBs, and more.
+
+Fast path:
+
+```bash
+pip install 'markitdown[all]'
+markitdown report.docx -o report.md
+markitdown deck.pptx -o deck.md
+markitdown source.pdf > source.md
+```
+
+Use narrower extras when you control the workflow and want fewer dependencies:
+
+```bash
+pip install 'markitdown[pdf,docx,pptx,xlsx]'
+```
+
+Security note: MarkItDown reads files, streams, and URLs with the privileges of the current process. For untrusted inputs, validate paths and URLs first, and prefer the narrowest conversion API that fits the workflow.
 
 ## 2.3.4 Scope Context Intentionally — Conditional Over Always-On
 

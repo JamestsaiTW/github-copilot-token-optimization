@@ -10,7 +10,7 @@
 
 ---
 
-## Quick Start — 11 Things to Do Right Now
+## Quick Start — 12 Things to Do Right Now
 
 > **June 1, 2026 — Usage-Based Billing (UBB) is live.** GitHub Copilot now bills real tokens (input + output + cached) drawn from pooled AI credits ($30/seat Business, $70/seat Enterprise) instead of request counters. Every technique in this guide translates directly into credit savings — and cache-friendly habits matter more than ever. See [Enterprise Governance](docs/12-enterprise-governance.md) for customer guardrails and [Model Selection & Pricing](docs/11-models-and-pricing.md) for model-cost guidance.
 
@@ -29,14 +29,15 @@ Don't have time to read the full guide? Do these today and cut your token usage:
 | 7 | **Be precise in your prompts** — "Add null check to `getUser()`" not "Can you please look at this and maybe add some error handling?" Note: your typed prompt is a small fraction of total input; precision matters more for quality than for raw token savings | Improves task targeting | 0 minutes |
 | 8 | **Retune prompts to the target model** — provider prompting guides change by model/version. Paste the official guide URL into Copilot and ask it to adapt `.github/copilot-instructions.md`, agent profiles, or app prompts for the model you actually use | Reduces rework | 10 minutes per model change |
 | 9 | **Audit your MCP servers** — disable servers you're not using; each costs ~100-500 tokens per agent step | Removes tool/schema overhead | 5 minutes |
-| 10 | **Run `/chronicle improve` weekly** (**Copilot CLI only**, experimental) — this slash command works in interactive Copilot CLI sessions, not as a general Copilot Chat feature. It finds recurring confusion in your CLI session history and generates custom-instruction fixes so the same misread intent stops costing tokens forever | Cuts recurring rework | 2 minutes per run |
-| 11 | **Try CodeAct for long tool chains** (**Copilot CLI only**, optional external plugin) — [`copilot-codeact-plugin`](https://github.com/jsturtevant/copilot-codeact-plugin) collapses multi-step tool chains into one sandboxed execution, which can reduce repeated replay of system prompt, prior messages, and tool definitions | Reduces tool-loop replay | 10-15 minutes |
+| 10 | **Convert rich files to Markdown before AI work** — `.docx`, `.pdf`, `.pptx`, `.xlsx`, HTML, images, audio, video, and ZIPs carry format tax. [Marc Bara's writeup](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042) shows the cost; use [Microsoft MarkItDown](https://github.com/microsoft/markitdown) before chat, agent, or RAG ingestion | Reduces noisy input context | 5 minutes |
+| 11 | **Run `/chronicle improve` weekly** (**Copilot CLI only**, experimental) — this slash command works in interactive Copilot CLI sessions, not as a general Copilot Chat feature. It finds recurring confusion in your CLI session history and generates custom-instruction fixes so the same misread intent stops costing tokens forever | Cuts recurring rework | 2 minutes per run |
+| 12 | **Try CodeAct for long tool chains** (**Copilot CLI only**, optional external plugin) — [`copilot-codeact-plugin`](https://github.com/jsturtevant/copilot-codeact-plugin) collapses multi-step tool chains into one sandboxed execution, which can reduce repeated replay of system prompt, prior messages, and tool definitions | Reduces tool-loop replay | 10-15 minutes |
 
 **Looking at this from an enterprise or customer-governance angle instead of an individual setup angle?** Start with [Enterprise Governance](docs/12-enterprise-governance.md). That chapter covers AI-credit budgets, per-user tightening, model-access policy, org instructions, and separate-organization tradeoffs.
 
 *Figures above are scoped to the mechanism named in each row, are not additive, and do not equal total bill reduction.*
 
-Output control (#1, #2) pays off immediately and compounds — set it once, save on every call. Structural input control (#3, #6) compounds across every interaction. Model routing (#4, #5) reduces cost at the billing tier. Model-specific prompt tuning (#8) cuts waste by improving first-pass quality. MCP audit (#9) eliminates thousands of hidden tokens per agent task.
+Output control (#1, #2) pays off immediately and compounds — set it once, save on every call. Structural input control (#3, #6) compounds across every interaction. Model routing (#4, #5) reduces cost at the billing tier. Model-specific prompt tuning (#8) cuts waste by improving first-pass quality. MCP audit (#9) eliminates thousands of hidden tokens per agent task. Markdown conversion (#10) removes DOCX/PDF/HTML layout noise before the model ever sees it.
 
 ---
 
@@ -62,7 +63,7 @@ Data-backed comparison: English is the most token-efficient language in these ex
 
 #### [2.3 Context Management](docs/04-context-management.md)
 
-Compress system instructions, compress memory files, scope context with `applyTo`, close unused editor tabs, configure Content Exclusion (Business/Enterprise admins), start fresh conversations. Control what gets sent to the model.
+Compress system instructions, compress memory files, scope context with `applyTo`, close unused editor tabs, convert non-text files to Markdown before AI work, configure Content Exclusion (Business/Enterprise admins), start fresh conversations. Control what gets sent to the model.
 
 #### [2.4 Output Control](docs/05-output-control.md)
 
@@ -127,8 +128,9 @@ Ranked by cost impact. Output first — it costs 5× more per token than input.
 3. **Ask Mode for simple questions** — 60-90% savings by avoiding Agent overhead
 4. **Audit MCP servers** — disable unused servers, save 5K-190K tokens per agent task
 5. **Auto model selection** — lower-cost default routing plus paid-plan discount on eligible usage, zero effort
-6. **Retune prompts to the target model** — better first-pass output reduces repeated clarification turns
-7. **Precise prompts** — 20-40% of user-prompt input tokens; more important for quality than raw savings
+6. **Convert rich files to Markdown first** — avoid paying for Word/PDF/HTML layout noise in chat, agent, and RAG workflows
+7. **Retune prompts to the target model** — better first-pass output reduces repeated clarification turns
+8. **Precise prompts** — 20-40% of user-prompt input tokens; more important for quality than raw savings
 
 ---
 

@@ -22,8 +22,9 @@ Practical guide to reducing GitHub Copilot token spend while keeping answers and
 3. Use Ask Mode for questions that do not need tools.
 4. Retune prompts and instructions against the official guide for your target model.
 5. Disable MCP servers you are not using.
-6. Audit long-running agent sessions and repeated back-and-forth.
-7. Install [RTK](https://github.com/rtk-ai/rtk) — CLI proxy that filters `git`, test runners, `grep`, and 100+ other shell commands before output reaches the agent. One install, 60-90% savings on tool-call results in agent and coding-agent sessions.
+6. Convert DOCX/PDF/Office/media inputs to Markdown before AI work; start with [MarkItDown](https://github.com/microsoft/markitdown).
+7. Audit long-running agent sessions and repeated back-and-forth.
+8. Install [RTK](https://github.com/rtk-ai/rtk) — CLI proxy that filters `git`, test runners, `grep`, and 100+ other shell commands before output reaches the agent. One install, 60-90% savings on tool-call results in agent and coding-agent sessions.
 
 ## Read by Topic
 
@@ -53,6 +54,7 @@ Practical guide to reducing GitHub Copilot token spend while keeping answers and
 - **Ask Mode**: single-shot interaction. Lowest-overhead choice for simple questions.
 - **Agent Mode**: multi-step interaction. Higher leverage, higher cost.
 - **Content Exclusion**: admin control for keeping selected repo content out of Copilot context.
+- **Format tax**: extra tokens from rich file metadata and layout noise in DOCX, PDF, HTML, slides, spreadsheets, images, and audio/video extraction. Convert to Markdown first.
 
 ## Useful Links
 
@@ -63,6 +65,8 @@ Practical guide to reducing GitHub Copilot token spend while keeping answers and
 - [LLMLingua](https://github.com/microsoft/LLMLingua)
 - [Caveman project](https://github.com/JuliusBrussee/caveman)
 - [RTK — Rust Token Killer](https://github.com/rtk-ai/rtk)
+- [Microsoft MarkItDown](https://github.com/microsoft/markitdown) — convert PDF, Office files, images, audio, HTML, ZIP contents, YouTube URLs, EPUBs, and more to Markdown for LLM workflows
+- [Marc Bara: "Your .docx Is Wasting 33% of Your AI Budget"](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042)
 - [Dina Berry: "How I Cut Token Usage from 52% to 13%"](https://dfberry.github.io/2026-05-06-tuning-up-copilot-context) — real measured numbers from a Copilot CLI production setup (Microsoft/GitHub content contributor)
 
 ## Notes

@@ -183,6 +183,31 @@ If you are guiding an organization or enterprise rollout, stop here and read [En
 
 Use this page for practitioner setup. Use the enterprise chapter for customer governance decisions.
 
+### Step 8: Convert Non-Text Inputs Before AI Work
+
+When a workflow starts from `.docx`, `.pdf`, `.pptx`, `.xlsx`, HTML exports, images, audio, video, or ZIP archives, add a conversion step before the content reaches Copilot or a RAG pipeline. Rich formats carry layout and metadata that inflate input tokens without improving the model's understanding.
+
+[Marc Bara's format-tax writeup](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042) gives the operating principle: Markdown should be the working format for AI, while Word/PDF remain output formats when a human process requires them. The article cites a 10-page PDF example dropping from roughly 12,400 tokens to 8,350 after clean Markdown conversion — about 33% less input for the same content.
+
+[Microsoft MarkItDown](https://github.com/microsoft/markitdown) is the default tool to try first. It converts PDF, Word, PowerPoint, Excel, images, audio, HTML, CSV/JSON/XML, ZIP contents, YouTube URLs, EPUBs, and more into Markdown for LLM and text-analysis workflows.
+
+```bash
+pip install 'markitdown[all]'
+
+markitdown report.docx -o report.md
+markitdown slides.pptx -o slides.md
+markitdown spreadsheet.xlsx -o spreadsheet.md
+markitdown source.pdf > source.md
+```
+
+For production pipelines, install only the needed extras when possible:
+
+```bash
+pip install 'markitdown[pdf,docx,pptx,xlsx]'
+```
+
+Then send the `.md` file to the model, chunk/index the `.md` file for retrieval, and regenerate `.docx` or `.pdf` only at the final delivery step. For untrusted uploads, validate paths and URLs first; MarkItDown performs I/O with the privileges of the running process.
+
 ## 4.2 Keep Reusable Guidance Outside Always-On Context
 
 This repo no longer ships installable workflow packs. Keep the same habit, though: put occasional workflow guidance outside the always-on prompt and pull it in only when the task needs it.
