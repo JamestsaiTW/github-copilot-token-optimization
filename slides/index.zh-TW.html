@@ -241,7 +241,7 @@
         <section>
           <section>
             <p class="kicker">快速開始</p>
-            <h2>現在立刻要做的 11 件事</h2>
+            <h2>現在立刻要做的 12 件事</h2>
             <p>先從輸出下手，再縮小結構性輸入，最後再分流模型與工具。</p>
           </section>
 
@@ -263,6 +263,7 @@
               <li><strong>寫精準的 prompt</strong>：目標檔案、函式、完成條件。</li>
               <li><strong>依目標模型重新調整 prompt</strong>。</li>
               <li><strong>稽核 MCP servers</strong>。</li>
+              <li><strong>把 DOCX／PDF／HTML 等富格式檔先轉成 Markdown</strong>。</li>
               <li><strong>在 Copilot CLI 執行 <code>/chronicle improve</code></strong>。</li>
               <li><strong>長串 CLI 工具鏈可試試 CodeAct</strong>。</li>
             </ol>
@@ -574,9 +575,25 @@ Done: targeted test passes.</code></pre>
               <li>關閉與當前任務無關的檔案。</li>
               <li>讓檔案聚焦且小而精。</li>
               <li>忽略 build 輸出、vendor 目錄、產生檔。</li>
+              <li>把富格式輸入先轉成 Markdown，避開格式稅。</li>
               <li>在 Business／Enterprise 使用 Content Exclusion 處理敏感路徑。</li>
               <li>換主題後開新對話。</li>
             </ul>
+          </section>
+
+          <section>
+            <h2>富格式輸入先轉 Markdown</h2>
+            <div class="grid">
+              <div class="card">
+                <h3>為什麼</h3>
+                <p>DOCX、PDF、HTML、投影片、試算表、圖片與音訊，常夾帶版面與中繼資料雜訊。模型得多吃一堆沒用 token。</p>
+              </div>
+              <div class="card">
+                <h3>怎麼做</h3>
+                <p>先用 <a href="https://github.com/microsoft/markitdown">Microsoft MarkItDown</a> 轉成 Markdown，再拿 Markdown 給 Copilot、agent 或 RAG。</p>
+              </div>
+            </div>
+            <p class="small warning">Marc Bara 的格式稅案例裡，同內容從 PDF 轉成乾淨 Markdown，輸入 token 約少 33%。</p>
           </section>
 
           <section>
@@ -970,6 +987,7 @@ x 每個工具 200 tokens
               <li>只回程式碼／限制輸出格式。</li>
               <li>縮小常駐 context。</li>
               <li>簡單問題用 Ask Mode。</li>
+              <li>先把富格式檔轉成 Markdown。</li>
               <li>稽核 MCP servers。</li>
               <li>模型變更後重新調整 prompt。</li>
             </ol>
@@ -1009,6 +1027,7 @@ x 每個工具 200 tokens
               <li>用 <code>applyTo</code> 拆出路徑專屬指引。</li>
               <li>預設使用 Auto；只有在有理由時才釘選。</li>
               <li>為 Coding Agent 加上 <code>copilot-setup-steps.yml</code>。</li>
+              <li>把 DOCX／PDF／HTML 等輸入先轉成 Markdown。</li>
             </ol>
           </section>
 
@@ -1030,6 +1049,16 @@ steps:
   - name: 建置
     run: npm run build</code></pre>
             <p class="small">避免靠 trial and error 來摸索，能節省 agent 步驟。</p>
+          </section>
+
+          <section>
+    <h2>實務步驟：先轉成 Markdown</h2>
+    <pre><code class="language-bash">pip install 'markitdown[all]'
+
+markitdown report.docx -o report.md
+markitdown slides.pptx -o slides.md
+markitdown source.pdf > source.md</code></pre>
+    <p class="small">工作格式用 Markdown。最後交付再回產出 `.docx`／`.pdf`。</p>
           </section>
 
           <section>
@@ -1356,10 +1385,10 @@ steps:
           <p><strong>時間：</strong>1 分鐘。</p>
           <p>只有在瀏覽器 live demo 時才示範控制方式。講者畫面可看備註；如果觀眾想跳章節，可用總覽模式。</p>
         `,
-        "現在立刻要做的 11 件事": `
+        "現在立刻要做的 12 件事": `
           <p><strong>時間：</strong>2 分鐘。</p>
           <p>把這頁當成 executive summary。若客戶只能實作一頁，就實作這一頁。</p>
-          <p>強調順序：輸出、常駐 context、模式／模型／工具分流。</p>
+          <p>強調順序：輸出、常駐 context、模式／模型／工具分流，再補上富格式檔案轉 Markdown 的前處理。</p>
         `,
         "最快見效的做法": `
           <p><strong>時間：</strong>3 分鐘。</p>

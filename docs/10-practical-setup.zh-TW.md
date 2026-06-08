@@ -97,6 +97,31 @@ Errors: Result<T,E> pattern, no thrown exceptions in business logic.
 Prompt 檔只能影響行為，真正的計費控制在別處。  
 若你在做組織或企業推動，請直接看 [Enterprise Governance](12-enterprise-governance.zh-TW.md)。
 
+### Step 8：先把非純文字輸入轉成 Markdown 再交給 AI
+
+如果工作流一開始就會碰到 `.docx`、`.pdf`、`.pptx`、`.xlsx`、HTML 匯出、圖片、音訊、影片或 ZIP 壓縮檔，請在內容進入 Copilot 或 RAG pipeline 之前先加一道轉換步驟。富格式檔案會夾帶版面與中繼資料，增加輸入 token，卻不會提升模型理解。
+
+[Marc Bara 的格式稅文章](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042) 已把原則講得很清楚：Markdown 才是 AI 的工作格式，Word／PDF 則是人類流程需要時的交付格式。文中引用的 10 頁 PDF 範例，轉成乾淨 Markdown 後，token 量大約從 12,400 降到 8,350，資訊不變，輸入卻少了約 33%。
+
+[Microsoft MarkItDown](https://github.com/microsoft/markitdown) 是預設最值得先試的工具。它可以把 PDF、Word、PowerPoint、Excel、圖片、音訊、HTML、CSV／JSON／XML、ZIP 內容、YouTube URL、EPUB 等轉成適合 LLM 與文字分析工作流的 Markdown。
+
+```bash
+pip install 'markitdown[all]'
+
+markitdown report.docx -o report.md
+markitdown slides.pptx -o slides.md
+markitdown spreadsheet.xlsx -o spreadsheet.md
+markitdown source.pdf > source.md
+```
+
+如果是正式流程，且可控格式有限，盡量只安裝需要的 extras：
+
+```bash
+pip install 'markitdown[pdf,docx,pptx,xlsx]'
+```
+
+之後把 `.md` 檔送進模型，或拿 `.md` 做 chunk／index；等到最後交付階段，再重新產出 `.docx` 或 `.pdf`。若來源不受信任，先驗證路徑與 URL；MarkItDown 會以執行程序的權限進行 I/O。
+
 ## 4.2 把可重用指引留在 Always-On Context 之外
 
 這個 repo 不再內建可安裝 workflow packs，但原則一樣：

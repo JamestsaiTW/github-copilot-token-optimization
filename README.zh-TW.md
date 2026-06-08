@@ -10,7 +10,7 @@
 
 ---
 
-## 快速開始：現在就該做的 11 件事
+## 快速開始：現在就該做的 12 件事
 
 > **2026 年 6 月 1 日，按使用量計費（UBB）已正式上線。** GitHub Copilot 現在不再以請求次數計費，而是改為針對實際 token 用量（input + output + cached）計費，並從共用的 AI 點數池中扣抵（Business 每席次 30 美元、Enterprise 每席次 70 美元）。本指南中的每一項技巧，都可以直接轉換成點數節省，而且在新的計費模式下，對快取友善的使用習慣會比以前更重要。客戶治理與限制建議請參考 [Enterprise Governance](docs/12-enterprise-governance.zh-TW.md)，模型成本建議請參考 [Model Selection & Pricing](docs/11-models-and-pricing.zh-TW.md)。
 
@@ -29,14 +29,15 @@
 | 7 | **提示詞要精準**：像是「幫 `getUser()` 加上 null 檢查」，而不是「你可以幫我看看這裡，順便加一些錯誤處理嗎？」注意：你自己輸入的 prompt 只占總輸入的一小部分；精準對品質的幫助，大於它對原始 token 節省的幫助 | 提升任務聚焦程度 | 0 分鐘 |
 | 8 | **依目標模型重調提示詞**：不同 provider 的 prompting 指南會隨模型與版本變動。把官方指南網址貼進 Copilot，請它依你實際使用的模型，調整 `.github/copilot-instructions.md`、agent profiles 或 app prompts | 減少返工 | 每次模型變更約 10 分鐘 |
 | 9 | **稽核你的 MCP servers**：停用沒在用的 server；每個 server 都可能讓每一步 agent 額外增加約 100-500 個 token | 移除工具／schema 額外負擔 | 5 分鐘 |
-| 10 | **每週執行 `/chronicle improve`**（**僅限 Copilot CLI**，實驗性功能）：這個 slash command 只能在互動式 Copilot CLI 工作階段中使用，並不是一般 Copilot Chat 功能。它會找出你 CLI 工作階段歷史中反覆出現的誤解，並產生自訂指令，讓同樣的誤判不再持續浪費 token | 降低重複返工 | 每次 2 分鐘 |
-| 11 | **長工具鏈任務可考慮 CodeAct**（**僅限 Copilot CLI**，可選的外部外掛）：[`copilot-codeact-plugin`](https://github.com/jsturtevant/copilot-codeact-plugin) 可以把多步驟工具鏈收斂成一次沙箱執行，減少重複重播 system prompt、先前訊息與工具定義的次數 | 降低工具迴圈重播成本 | 10-15 分鐘 |
+| 10 | **先把富格式檔案轉成 Markdown 再交給 AI**：`.docx`、`.pdf`、`.pptx`、`.xlsx`、HTML、圖片、音訊、影片與 ZIP 都帶有格式稅。[Marc Bara 的文章](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042) 已示範這類成本；在 chat、agent 或 RAG 匯入前，先用 [Microsoft MarkItDown](https://github.com/microsoft/markitdown) 轉成乾淨的 Markdown | 降低雜訊輸入／上下文 | 5 分鐘 |
+| 11 | **每週執行 `/chronicle improve`**（**僅限 Copilot CLI**，實驗性功能）：這個 slash command 只能在互動式 Copilot CLI 工作階段中使用，並不是一般 Copilot Chat 功能。它會找出你 CLI 工作階段歷史中反覆出現的誤解，並產生自訂指令，讓同樣的誤判不再持續浪費 token | 降低重複返工 | 每次 2 分鐘 |
+| 12 | **長工具鏈任務可考慮 CodeAct**（**僅限 Copilot CLI**，可選的外部外掛）：[`copilot-codeact-plugin`](https://github.com/jsturtevant/copilot-codeact-plugin) 可以把多步驟工具鏈收斂成一次沙箱執行，減少重複重播 system prompt、先前訊息與工具定義的次數 | 降低工具迴圈重播成本 | 10-15 分鐘 |
 
 **如果你是從企業治理或客戶治理的角度來看，而不是個人設定最佳化？** 請直接從 [Enterprise Governance](docs/12-enterprise-governance.zh-TW.md) 開始。那一章涵蓋 AI 點數預算、針對個別使用者收緊權限、模型存取政策、組織層級指示，以及何時值得為了治理需求拆分成不同組織。
 
 *上表數字僅針對各列所述機制，不可直接相加，也不代表總體帳單降幅。*
 
-輸出控制（#1、#2）會立刻生效，而且會持續累積回報：設定一次，每次呼叫都省。結構性的輸入控制（#3、#6）會在每一次互動中持續累積效益。模型路由（#4、#5）會從計費層級直接降低成本。針對模型調整提示詞（#8）則透過提升首次回應品質來減少浪費。MCP 稽核（#9）可以直接砍掉每次 agent 任務中那些隱藏的 token 成本。
+輸出控制（#1、#2）會立刻生效，而且會持續累積回報：設定一次，每次呼叫都省。結構性的輸入控制（#3、#6）會在每一次互動中持續累積效益。模型路由（#4、#5）會從計費層級直接降低成本。針對模型調整提示詞（#8）則透過提升首次回應品質來減少浪費。MCP 稽核（#9）可以直接砍掉每次 agent 任務中那些隱藏的 token 成本。Markdown 轉換（#10）則能在模型看到內容前，先移除 DOCX／PDF／HTML 的版面與標記雜訊。
 
 ---
 
@@ -62,7 +63,7 @@
 
 #### [2.3 Context Management](docs/04-context-management.zh-TW.md)
 
-壓縮 system instructions、壓縮記憶檔、用 `applyTo` 限定上下文、關閉未使用的編輯器分頁、設定 Content Exclusion（Business／Enterprise 管理員可用），以及在需要時開新對話。重點是控制實際送進模型的內容。
+壓縮 system instructions、壓縮記憶檔、用 `applyTo` 限定上下文、關閉未使用的編輯器分頁、在 AI 工作前先把非純文字檔轉成 Markdown、設定 Content Exclusion（Business／Enterprise 管理員可用），以及在需要時開新對話。重點是控制實際送進模型的內容。
 
 #### [2.4 Output Control](docs/05-output-control.zh-TW.md)
 
@@ -127,8 +128,9 @@
 3. **簡單問題使用 Ask Mode**：避免 Agent 額外開銷，可節省 60-90%。
 4. **稽核 MCP servers**：停用沒在用的 servers，每次 agent 任務可省下 5 千到 19 萬個 token。
 5. **使用 Auto 模型選擇**：以更低成本的預設路由加上付費方案折扣達成節省，幾乎零成本導入。
-6. **依目標模型重調提示詞**：提升第一次輸出的品質，減少來回澄清。
-7. **精準提示詞**：可影響使用者提示詞輸入 token 的 20-40%；對品質的幫助通常比對原始節省更重要。
+6. **先把富格式檔案轉成 Markdown**：避免在 chat、agent 與 RAG 工作流中為 Word／PDF／HTML 的版面雜訊付費。
+7. **依目標模型重調提示詞**：提升第一次輸出的品質，減少來回澄清。
+8. **精準提示詞**：可影響使用者提示詞輸入 token 的 20-40%；對品質的幫助通常比對原始節省更重要。
 
 ---
 

@@ -60,6 +60,7 @@
 | Prompting | Constrain output | — | 40-80% | 視格式而定 | 資料抽取、快速回答 |
 | Context | Limit context | 50-90% | — | 視情況 | 大型 codebase |
 | Context | Compressed instructions | 40-60% of file | — | 幾乎無 | 每個 repo |
+| Context | 先把非純文字檔轉成 Markdown | 引用 PDF 範例約 33%；雜訊 HTML 通常更高 | — | 結構更清楚 | DOCX、PDF、PPTX、XLSX、圖片、音訊、RAG 匯入 |
 | Output | Code-only responses | — | 40-70% | 好 | 程式產生 |
 | Agent | Ask vs Agent mode | 60-90% | — | 好 | 簡單問題 |
 | Always-on files | 只留 landmines | 視檔案大小 | — | 多半更好 | 所有 agent 工作流 |
@@ -74,8 +75,11 @@
 3. **Code-only / constrain output**
 4. **縮小 always-on context**
 5. **簡單問題用 Ask Mode**
-6. **稽核 MCP servers**
-7. **依模型調整 prompts**
+6. **先把非純文字檔轉成 Markdown**
+7. **稽核 MCP servers**
+8. **依模型調整 prompts**
+
+> C5 來源：Marc Bara 的 [Your .docx Is Wasting 33% of Your AI Budget](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042)。當非純文字檔需要進入 AI 工作流時，優先使用 [Microsoft MarkItDown](https://github.com/microsoft/markitdown)。
 
 ## 3.4 品質影響評估
 
