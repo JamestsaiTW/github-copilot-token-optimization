@@ -1,5 +1,7 @@
 # Token Optimization Guide for GitHub Copilot
 
+[English](README.md) | [繁體中文（台灣）](README.zh-TW.md)
+
 > [!IMPORTANT]
 > **This is not official GitHub or Microsoft guidance.** This guide is a community resource born from real-world field experience — patterns observed, techniques tested, and lessons learned by practitioners adopting AI for development purposes. It reflects industry backspark: practical knowledge gathered from the ground up, not top-down product documentation. Use it to inform about optimization strategies, and adapt what works for the context of your customer. Official guidance lives at [docs.github.com/copilot](https://docs.github.com/copilot).
 
