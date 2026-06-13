@@ -2,7 +2,7 @@
 
 [English](01-why-tokens-matter.md) | [繁體中文（台灣）](01-why-tokens-matter.zh-TW.md)
 
-[← Back to Guide](index.md)
+[← Back to Guide](index.en.md)
 
 ---
 

@@ -15,7 +15,7 @@
       {% include "partials/logo.html" %}
     </a>
     {{ config.site_name | e }} /
-    <a class="site-title-link" href="{{ 'index.zh-TW/' | url }}">Token 最佳化指南</a>
+    <a class="site-title-link" href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}">Token 最佳化指南</a>
   </label>
   {% if config.repo_url %}
     <div class="md-nav__source">

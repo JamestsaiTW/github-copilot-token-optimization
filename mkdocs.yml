@@ -2,6 +2,7 @@ site_name: Token Optimization Guide
 site_description: Practical guide to reducing GitHub Copilot token spend without losing quality.
 theme:
   name: material
+  language: zh-TW
   custom_dir: docs/overrides
   palette:
     - scheme: default
@@ -30,8 +31,8 @@ extra_css:
   - stylesheets/extra.css
 nav:
   - Home:
-      - English: index.md
-      - 繁體中文（台灣）: index.zh-TW.md
+      - 繁體中文（台灣）: index.md
+      - English: index.en.md
   - English Guide:
       - Part 1:
           - Why Tokens Matter: 01-why-tokens-matter.md

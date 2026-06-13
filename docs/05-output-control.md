@@ -2,7 +2,7 @@
 
 [English](05-output-control.md) | [繁體中文（台灣）](05-output-control.zh-TW.md)
 
-[← Back to Guide](index.md)
+[← Back to Guide](index.en.md)
 
 > **Why this section matters most for cost.** Output tokens cost **5× more per token** than input tokens across all Anthropic/Copilot UBB pricing tiers. Even though responses are typically smaller in volume than total input (which includes file context, history, and tool schemas), the pricing asymmetry makes output control the highest per-token ROI action in this guide. One line in `copilot-instructions.md` — "Code only, no explanation" — cuts output cost by 40–70% on every code task, permanently.
 

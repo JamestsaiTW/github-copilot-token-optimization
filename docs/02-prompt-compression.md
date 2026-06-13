@@ -2,7 +2,7 @@
 
 [English](02-prompt-compression.md) | [繁體中文（台灣）](02-prompt-compression.zh-TW.md)
 
-[← Back to Guide](index.md)
+[← Back to Guide](index.en.md)
 
 ---
 
