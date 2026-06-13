@@ -2,6 +2,7 @@ site_name: Token Optimization Guide
 site_description: Practical guide to reducing GitHub Copilot token spend without losing quality.
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
     - scheme: default
       primary: blue grey

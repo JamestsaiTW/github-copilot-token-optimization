@@ -7,6 +7,21 @@
   backdrop-filter: saturate(180%) blur(10px);
 }
 
+.md-header__topic .site-title-link {
+  color: inherit;
+}
+
+.md-nav__title .site-title-link {
+  color: inherit;
+}
+
+.md-header__topic .site-title-link:hover,
+.md-header__topic .site-title-link:focus-visible,
+.md-nav__title .site-title-link:hover,
+.md-nav__title .site-title-link:focus-visible {
+  text-decoration: underline;
+}
+
 .md-main__inner {
   margin-top: 1.25rem;
 }
