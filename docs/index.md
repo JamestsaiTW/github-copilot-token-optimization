@@ -1,5 +1,7 @@
 # Token Optimization Guide
 
+[English](index.md) | [繁體中文（台灣）](index.zh-TW.md)
+
 Practical guide to reducing GitHub Copilot token spend while keeping answers and code useful.
 
 [Start with Part 1](01-why-tokens-matter.md){ .md-button .md-button--primary }
