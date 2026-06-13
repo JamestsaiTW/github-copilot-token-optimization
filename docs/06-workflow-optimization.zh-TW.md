@@ -2,7 +2,7 @@
 
 [English](06-workflow-optimization.md) | [繁體中文（台灣）](06-workflow-optimization.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 

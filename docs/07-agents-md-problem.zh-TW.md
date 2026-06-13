@@ -2,7 +2,7 @@
 
 [English](07-agents-md-problem.md) | [繁體中文（台灣）](07-agents-md-problem.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 

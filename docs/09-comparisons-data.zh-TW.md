@@ -2,7 +2,7 @@
 
 [English](09-comparisons-data.md) | [繁體中文（台灣）](09-comparisons-data.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 

@@ -2,7 +2,7 @@
 
 [English](04-context-management.md) | [繁體中文（台灣）](04-context-management.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 

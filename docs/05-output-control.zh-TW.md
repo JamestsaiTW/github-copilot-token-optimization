@@ -2,7 +2,7 @@
 
 [English](05-output-control.md) | [繁體中文（台灣）](05-output-control.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 > **為什麼這章對成本最重要：** 在 Anthropic／Copilot UBB 的定價邏輯下，輸出 token 的單價約是輸入的 **5 倍**。即使回應長度通常小於總輸入，這個價差仍讓輸出控制成為全指南中 ROI 最高的手段之一。只要在 `copilot-instructions.md` 放上一句 `Code only, no explanation.`，許多程式任務的輸出成本就能永久減少 40–70%。
 

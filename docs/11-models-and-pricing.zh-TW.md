@@ -2,7 +2,7 @@
 
 [English](11-models-and-pricing.md) | [繁體中文（台灣）](11-models-and-pricing.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 
@@ -127,7 +127,7 @@ GitHub 目前沒有公開各 Copilot 模型的「輸入 token 單價 vs 輸出 t
 - [Practical Setup](10-practical-setup.zh-TW.md)
 - [Workflow Optimization](06-workflow-optimization.zh-TW.md)
 - [Enterprise Governance](12-enterprise-governance.zh-TW.md)
-- [Guide Home](index.zh-TW.md)
+- [Guide Home](index.md)
 
 ---
 
