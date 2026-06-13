@@ -234,6 +234,40 @@ Agent Mode 常比 Ask Mode 貴上很多倍。
 
 每多一步，完整 context 都可能再重送一次，而且還會帶上前一步的結果，因此後期步驟會越來越貴。
 
+<div class="guide-visual" role="img" aria-label="Agent Mode 會在多步驟中重複重送 context 與工具結果">
+  <p class="guide-visual__title">Agent Mode 迴圈</p>
+  <div class="guide-visual__grid guide-visual__grid--3">
+    <section class="guide-visual__card guide-visual__card--step">
+      <h4><span class="guide-visual__step-label">Step 1：</span><span class="guide-visual__step-copy">載入 context</span></h4>
+      <ul class="guide-visual__list">
+        <li>System prompt（約 500 tokens）</li>
+        <li><code>copilot-instructions.md</code>（約 50-1500 tokens）</li>
+        <li>Tool definitions（約 2,000-20,000 tokens）</li>
+        <li>Conversation history（持續增加）</li>
+        <li>你的 prompt</li>
+      </ul>
+      <p class="guide-visual__note">送進 LLM → 取得回應</p>
+    </section>
+    <section class="guide-visual__card guide-visual__card--step">
+      <h4><span class="guide-visual__step-label">Step 2：</span><span class="guide-visual__step-copy">呼叫工具</span></h4>
+      <ul class="guide-visual__list">
+        <li>Tool call（function + params）→ output tokens</li>
+        <li>Tool result → 下一步的 input tokens</li>
+        <li>對結果做判斷 → output tokens</li>
+      </ul>
+    </section>
+    <section class="guide-visual__card guide-visual__card--step">
+      <h4><span class="guide-visual__step-label">Step 3：</span><span class="guide-visual__step-copy">再次重送</span></h4>
+      <ul class="guide-visual__list">
+        <li>Step 1 的 context 全部重載</li>
+        <li>+ Step 2 的工具呼叫與結果</li>
+        <li>+ 持續成長的對話內容</li>
+      </ul>
+      <p class="guide-visual__metric">重複 5-25 次</p>
+    </section>
+  </div>
+</div>
+
 ### 4.5.3 如何減少 Agent 步數
 
 - **Prompt 要精準，並加上 acceptance criteria**

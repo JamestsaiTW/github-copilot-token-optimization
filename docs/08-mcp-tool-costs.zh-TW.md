@@ -47,15 +47,24 @@ Buffer:        40.4k (20%)
 
 真正貴的是它會被重複載入：
 
-```text
-Tools loaded = servers × tools_per_server × tokens_per_tool
-
-Example:
-10 MCP servers × 5 tools × 200 tokens = 10,000 tokens
-
-Agent mode 走 15 steps：
-10,000 × 15 = 150,000 tokens
-```
+<div class="guide-visual" role="img" aria-label="工具定義成本會隨 server、tool 與 agent 步數相乘">
+  <p class="guide-visual__title">工具成本會一直重載</p>
+  <div class="guide-visual__grid guide-visual__grid--2">
+    <section class="guide-visual__card">
+      <h4>公式</h4>
+      <p class="guide-visual__math">Tools loaded = servers x tools_per_server x tokens_per_tool</p>
+      <p class="guide-visual__note">整包工具定義會在每個 agent step 再載一次。</p>
+    </section>
+    <section class="guide-visual__card">
+      <h4>重度設定範例</h4>
+      <p class="guide-visual__math">10 MCP servers x 5 tools x 200 tokens = 10,000 tokens</p>
+      <div class="guide-visual__flow">
+        <p class="guide-visual__math">10,000 tokens x 15 steps</p>
+      </div>
+      <p class="guide-visual__metric">150,000 tokens</p>
+    </section>
+  </div>
+</div>
 
 也就是說，還沒做任何真正工作，就先花了 15 萬個 token 讓 agent 知道有哪些工具可用。
 

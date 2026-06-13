@@ -151,15 +151,36 @@ Does compression hurt output quality? The research says: **rarely, and only at e
 
 The savings curve is not linear. The first 30% of compression (dropping filler) is free. The next 20% (fragments, abbreviations) is nearly free. Beyond that, each additional compression point risks quality.
 
-```text
-Savings vs. Quality Risk:
-
-Quality  ████████████████████████████████████░░░░░░░░░
-Risk     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░███████████████
-         0%       20%      40%      60%      80%
-                      Token Savings →
-               lite     full      ultra    extreme
-```
+<div class="guide-visual" role="img" aria-label="Compression savings versus quality risk curve">
+  <p class="guide-visual__title">Savings vs. Quality Risk</p>
+  <div class="guide-visual__curve">
+    <div class="guide-visual__curve-row">
+      <span class="guide-visual__curve-label">Quality</span>
+      <div class="guide-visual__curve-bar">
+        <div class="guide-visual__curve-fill" style="width: 82%;"></div>
+      </div>
+    </div>
+    <div class="guide-visual__curve-row">
+      <span class="guide-visual__curve-label">Risk</span>
+      <div class="guide-visual__curve-bar">
+        <div class="guide-visual__curve-fill guide-visual__curve-fill--risk" style="width: 62%;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="guide-visual__scale">
+    <span>0%</span>
+    <span>20%</span>
+    <span>40%</span>
+    <span>60%</span>
+    <span>80%</span>
+  </div>
+  <div class="guide-visual__ticks">
+    <span>lite</span>
+    <span>full</span>
+    <span>ultra</span>
+    <span>extreme</span>
+  </div>
+</div>
 
 **Sweet spot: full caveman (30-50% input token savings; 40-55% output savings with terse system instructions).** Maximum return, negligible risk.
 

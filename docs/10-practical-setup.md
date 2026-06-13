@@ -371,28 +371,39 @@ Each mode has a fundamentally different token cost profile:
 
 Understanding the loop helps you minimize steps:
 
-```text
-Step 1: Load context
-  ├── System prompt (~500 tokens)
-  ├── copilot-instructions.md (~50-1500 tokens)
-  ├── Tool definitions (~2,000-20,000 tokens)
-  ├── Conversation history (growing)
-  └── YOUR prompt
-  → Send to LLM → Get response
-
-Step 2: LLM decides to call a tool
-  ├── Tool call (function + params) → output tokens
-  ├── Tool result → input tokens (next step)
-  └── Reasoning about result → output tokens
-
-Step 3: Another tool call (or generate response)
-  ├── ALL of Step 1's context reloaded
-  ├── + Step 2's tool call and result
-  └── + growing conversation
-  → Send to LLM again
-
-... repeat 5-25 times
-```
+<div class="guide-visual" role="img" aria-label="Agent mode loop reloading context and tool calls across repeated steps">
+  <p class="guide-visual__title">Agent Mode Loop</p>
+  <div class="guide-visual__grid guide-visual__grid--3">
+    <section class="guide-visual__card guide-visual__card--step">
+      <h4><span class="guide-visual__step-label">Step 1:</span><span class="guide-visual__step-copy">Load context</span></h4>
+      <ul class="guide-visual__list">
+        <li>System prompt (~500 tokens)</li>
+        <li><code>copilot-instructions.md</code> (~50-1500 tokens)</li>
+        <li>Tool definitions (~2,000-20,000 tokens)</li>
+        <li>Conversation history (growing)</li>
+        <li>Your prompt</li>
+      </ul>
+      <p class="guide-visual__note">Send to LLM → get response</p>
+    </section>
+    <section class="guide-visual__card guide-visual__card--step">
+      <h4><span class="guide-visual__step-label">Step 2:</span><span class="guide-visual__step-copy">Call tool</span></h4>
+      <ul class="guide-visual__list">
+        <li>Tool call (function + params) → output tokens</li>
+        <li>Tool result → input tokens</li>
+        <li>Reasoning about result → output tokens</li>
+      </ul>
+    </section>
+    <section class="guide-visual__card guide-visual__card--step">
+      <h4><span class="guide-visual__step-label">Step 3:</span><span class="guide-visual__step-copy">Repeat</span></h4>
+      <ul class="guide-visual__list">
+        <li>All of Step 1 context reloads</li>
+        <li>+ prior tool call and result</li>
+        <li>+ growing conversation</li>
+      </ul>
+      <p class="guide-visual__metric">Repeat 5-25 times</p>
+    </section>
+  </div>
+</div>
 
 **Key insight:** Context grows with every step. Step 15 carries all the context from steps 1-14 plus the original prompt. This is why long agent sessions get expensive fast.
 

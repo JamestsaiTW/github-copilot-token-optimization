@@ -46,6 +46,245 @@
   margin: 0 auto 1.5rem;
 }
 
+.md-typeset .token-context-diagram {
+  margin: 1.5rem 0;
+}
+
+.md-typeset .token-context-diagram__frame {
+  padding: 1.25rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(15, 118, 110, 0.08), rgba(49, 70, 89, 0.04));
+}
+
+.md-typeset .token-context-diagram__title {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .token-context-diagram__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+  gap: 1rem;
+}
+
+.md-typeset .token-context-diagram__panel {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--md-accent-fg-color) 18%, white);
+  border-radius: 0.85rem;
+  background-color: var(--md-default-bg-color);
+  box-shadow: 0 0.5rem 1.2rem rgba(15, 23, 42, 0.06);
+}
+
+.md-typeset .token-context-diagram__panel > h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.md-typeset .token-context-diagram__panel > ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.md-typeset .token-context-diagram__panel > ul li + li {
+  margin-top: 0.35rem;
+}
+
+.md-typeset .token-context-diagram__panel-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding-bottom: 1.5rem;
+}
+
+.md-typeset .token-context-diagram__panel-body > p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.md-typeset .guide-visual {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(15, 118, 110, 0.08), rgba(49, 70, 89, 0.04));
+}
+
+.md-typeset .guide-visual__title {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .guide-visual__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.md-typeset .guide-visual__grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.md-typeset .guide-visual__grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.md-typeset .guide-visual__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--md-accent-fg-color) 18%, white);
+  border-radius: 0.85rem;
+  background-color: var(--md-default-bg-color);
+  box-shadow: 0 0.5rem 1.2rem rgba(15, 23, 42, 0.06);
+}
+
+.md-typeset .guide-visual__card > h4,
+.md-typeset .guide-visual__card > p {
+  margin: 0;
+}
+
+.md-typeset .guide-visual__card > h4 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.md-typeset .guide-visual__card--step > h4 {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.md-typeset .guide-visual__step-label,
+.md-typeset .guide-visual__step-copy {
+  display: block;
+}
+
+.md-typeset .guide-visual__card--step .guide-visual__list {
+  align-self: stretch;
+  box-sizing: border-box;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  width: 100%;
+  padding-left: 1.35rem !important;
+  padding-inline-start: 1.35rem !important;
+  padding-right: 0.35rem;
+}
+
+.md-typeset .guide-visual__card--step .guide-visual__list li {
+  margin-left: 0 !important;
+  margin-inline-start: 0 !important;
+  text-align: left;
+}
+
+.md-typeset .guide-visual__list {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.md-typeset .guide-visual__list li + li {
+  margin-top: 0.35rem;
+}
+
+.md-typeset .guide-visual__math {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(49, 70, 89, 0.08);
+  font-family: var(--md-code-font-family);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.md-typeset .guide-visual__metric {
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.md-typeset .guide-visual__note {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.8rem;
+}
+
+.md-typeset .guide-visual__flow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.md-typeset .guide-visual__flow::before {
+  content: "→";
+  color: var(--md-accent-fg-color);
+  font-weight: 800;
+}
+
+.md-typeset .guide-visual__curve {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.md-typeset .guide-visual__curve-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.md-typeset .guide-visual__curve-label {
+  font-weight: 700;
+}
+
+.md-typeset .guide-visual__curve-bar {
+  position: relative;
+  height: 1rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(49, 70, 89, 0.12);
+}
+
+.md-typeset .guide-visual__curve-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(15, 118, 110, 0.95), rgba(15, 118, 110, 0.45));
+}
+
+.md-typeset .guide-visual__curve-fill--risk {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.35), rgba(239, 68, 68, 0.9));
+}
+
+.md-typeset .guide-visual__scale,
+.md-typeset .guide-visual__ticks {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .guide-visual__ticks {
+  font-weight: 600;
+}
+
 .md-typeset blockquote {
   border-left-color: var(--md-accent-fg-color);
 }
@@ -99,6 +338,24 @@
 }
 
 @media screen and (max-width: 45rem) {
+  .md-typeset .token-context-diagram__frame {
+    padding: 1rem;
+  }
+
+  .md-typeset .token-context-diagram__columns {
+    grid-template-columns: 1fr;
+  }
+
+  .md-typeset .guide-visual {
+    padding: 1rem;
+  }
+
+  .md-typeset .guide-visual__grid--2,
+  .md-typeset .guide-visual__grid--3,
+  .md-typeset .guide-visual__curve-row {
+    grid-template-columns: 1fr;
+  }
+
   .site-footer-meta {
     grid-template-columns: 1fr;
     justify-items: center;
