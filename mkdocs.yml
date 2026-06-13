@@ -27,6 +27,9 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
+extra:
+  original_site_url: https://olivomarco.github.io/github-copilot-token-optimization/
+  footer_repo_url: https://github.com/JamestsaiTW/github-copilot-token-optimization
 extra_css:
   - stylesheets/extra.css
 nav:
