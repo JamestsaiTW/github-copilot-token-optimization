@@ -2,7 +2,7 @@
 
 [English](03-language-comparison.md) | [繁體中文（台灣）](03-language-comparison.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 

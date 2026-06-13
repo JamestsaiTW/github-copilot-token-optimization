@@ -2,7 +2,7 @@
 
 [English](12-enterprise-governance.md) | [繁體中文（台灣）](12-enterprise-governance.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 

@@ -2,7 +2,7 @@
 
 [English](08-mcp-tool-costs.md) | [繁體中文（台灣）](08-mcp-tool-costs.zh-TW.md)
 
-[← 返回指南](index.zh-TW.md)
+[← 返回指南](index.md)
 
 ---
 
