@@ -39,7 +39,7 @@ L42: bug: user can be null here. Add null guard before .email access.
 
 - `🔴` Bug / security，必修
 - `🟡` Suggestion，建議修
-- `🔵` Nit，可選優化
+- `🔵` Nit，可選最佳化
 - `❓` Question，需要釐清
 
 ## 2.5.3 Ask Mode vs. Agent Mode
@@ -69,6 +69,10 @@ L42: bug: user can be null here. Add null guard before .email access.
 - MCP 工具 catalog 載入次數也會跟著下降
 - 整合後的結果通常比逐步敘述每一步更短
 
+### 互補：用 RTK 壓縮工具輸出
+
+CodeAct 減少的是工具呼叫的**次數**；[**RTK (Rust Token Killer)**](https://github.com/rtk-ai/rtk) 減少的則是每次工具結果的**大小**，兩者可搭配使用。RTK 是 CLI proxy，會攔截 `git`、`cargo test`、`grep`、`ls` 等 100+ 種開發指令，在輸出回灌給 agent 前先壓縮，每個指令可省 60–90%。設定方式與完整指令清單見 [MCP & Tool Costs §2.7.7](08-mcp-tool-costs.zh-TW.md#277-rtk)。
+
 ## 2.5.4 預設使用 Auto 模型選擇
 
 模型選擇器本身就是重要的成本控制介面。把高成本模型長時間釘住，代表連最簡單的互動都會用高費率計價。
@@ -94,6 +98,14 @@ L42: bug: user can be null here. Add null guard before .email access.
 保留行為不變，但減少錯誤回合與澄清成本。
 ```
 
+各家官方 prompting guide 起點：
+
+| 供應商 | 模型家族 | Prompting guide |
+|---|---|---|
+| Anthropic | Claude Sonnet / Opus / Haiku | [Prompt engineering 總覽](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview)、[Claude 最新模型最佳實務](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices) |
+| OpenAI | GPT-5.5 / GPT-5 | [GPT-5.5 prompting guide](https://developers.openai.com/api/docs/guides/prompt-guidance)、[GPT-5 prompting guide](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide) |
+| Google | Gemini | [Gemini prompt design strategies](https://ai.google.dev/gemini-api/docs/prompting-strategies) |
+
 適用時機：
 
 - 換了預設模型
@@ -113,7 +125,7 @@ L42: bug: user can be null here. Add null guard before .email access.
 ## 2.5.7 用 `/chronicle` 關閉回饋迴路
 
 Token 浪費不只發生在單一 prompt，也會發生在你沒察覺的重複模式上。  
-`/chronicle` 能分析你的本機 session 歷史，找出 Copilot 常誤解你的地方。
+[`/chronicle`](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/chronicle) 能分析你的本機 session 歷史，找出 Copilot 常誤解你的地方。
 
 最有價值的是：
 

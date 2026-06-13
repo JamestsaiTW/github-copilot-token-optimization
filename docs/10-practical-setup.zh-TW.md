@@ -81,6 +81,8 @@ Errors: Result<T,E> pattern, no thrown exceptions in business logic.
 
 核心原則：**不要把 premium 模型拿去做便宜模型也能正確完成的工作。**
 
+來源：[Anthropic Effort 參數文件](https://platform.claude.com/docs/en/build-with-claude/effort)、[VS Code Language Models 文件](https://code.visualstudio.com/docs/copilot/concepts/language-models)、[GitHub Copilot CLI 程式化參考](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-programmatic-reference)。
+
 ### Step 6：依實際使用模型重調 Instructions
 
 換模型時，不要假設舊 prompt stack 還是最佳做法。  
@@ -91,6 +93,8 @@ Errors: Result<T,E> pattern, no thrown exceptions in business logic.
 指定目標模型與要調整的檔案。
 請它在不改變行為的前提下，降低錯誤與返工。
 ```
+
+各家官方 guide 起點：[Anthropic Claude 最佳實務](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices)、[OpenAI GPT-5 prompting guide](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide)、[Google Gemini prompt strategies](https://ai.google.dev/gemini-api/docs/prompting-strategies)。
 
 ### Step 7：把治理控制放在 Prompt 外
 
@@ -189,7 +193,13 @@ Agent 會讀它們，把它們也當成 context。
 
 ### 4.3.6 用 RTK 壓縮 Shell 輸出
 
-Coding Agent 會跑很多 shell 指令，輸出都會回灌成下一步的輸入 token。RTK 能把這些結果先壓縮再交給 agent。
+Coding Agent 會跑很多 shell 指令，輸出都會回灌成下一步的輸入 token。[RTK (Rust Token Killer)](https://github.com/rtk-ai/rtk) 能把這些結果先壓縮再交給 agent，行為不變但輸出更精簡。安裝：
+
+```bash
+brew install rtk   # 或：curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+```
+
+設定方式與各指令減幅見 [MCP & Tool Costs §2.7.7](08-mcp-tool-costs.zh-TW.md#277-rtk)。
 
 ## 4.4 建立習慣
 

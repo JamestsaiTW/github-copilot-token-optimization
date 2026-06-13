@@ -14,7 +14,7 @@
 
 ETH Zurich 的研究（Gloaguen 等，AGENTBENCH，2026 年 2 月）在 12 個 repositories、138 個任務與 4 種 coding agents 上測試後，得到的結果是：
 
-| 發現 | 數據 |
+| 發現 | 資料 |
 |------|------|
 | LLM 產生的 context files 會降低表現 | 8 種設定中有 5 種表現下滑 |
 | 平均正確率變化 | **−2%** |

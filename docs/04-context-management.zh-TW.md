@@ -12,7 +12,7 @@
 
 > **補充：相關但不同的慣例。** `.github/copilot-instructions.md` 是 GitHub Copilot 原生的 repo 級 instruction 檔；`AGENTS.md` 則是跨工具慣例，Copilot 也會讀。它們不是同一個檔案，但共同點是：都屬於 **always-on context**。如果內容重複，就等於每次互動重複付費。
 
-這也是最值得優化的檔案之一。假設 instruction 檔有 500 字、約 700 tokens，你每次問問題前就先燒掉 700 tokens。
+這也是最值得最佳化的檔案之一。假設 instruction 檔有 500 字、約 700 tokens，你每次問問題前就先燒掉 700 tokens。
 
 **壓縮前：**
 
@@ -39,7 +39,7 @@ Fragments OK. Short synonyms. Code unchanged.
 **原則：**
 
 - 先合併重複內容，再做壓縮
-- 刪掉冠詞、填充詞、客套話與保留語氣
+- 刪掉冠詞、填充詞、模糊保留與客套話
 - 保留程式碼區塊、inline code、URL、路徑與技術詞
 - 保持 Markdown 結構不被破壞
 
@@ -54,7 +54,7 @@ Copilot 會自動納入工作區中的內容，例如開啟中的檔案、匯入
 - **對 build output、vendor、generated files 使用 `.gitignore`。**
 - **使用 `applyTo:` 範圍化 instruction 檔**，讓特定規則只在相關檔案出現時才載入。
 - **在 AI 工作前，先把非純文字檔轉成 Markdown。** 這是處理富格式輸入時，最直接的 token 節省。
-- **Business／Enterprise 環境下**，可請管理員設定 Content Exclusion 做政策與敏感路徑控管。
+- **Business／Enterprise 環境下**，可請管理員設定 Content Exclusion 做政策與敏感路徑控管，詳見 [GitHub Docs — 從 Copilot 排除內容](https://docs.github.com/en/copilot/how-tos/configure-content-exclusion/exclude-content-from-copilot)。它只在 Copilot Business 與 Enterprise 提供，且不適用於 Copilot CLI、cloud agent 或 IDE Chat 的 Agent Mode；請把它當成隱私／政策控制，而非每位開發者的省 token 旋鈕。
 
 要小心的高風險檔案包括：
 

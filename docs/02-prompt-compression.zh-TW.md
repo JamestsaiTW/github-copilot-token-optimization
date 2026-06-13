@@ -30,7 +30,7 @@
 | 冗長 | "Hey, could you please help me refactor this function? I think it might have some issues with how it handles the authentication, and I'd really like it to be more efficient. Thanks!" | 約 40 |
 | 原始人式 | "Refactor function. Fix auth handling. Make efficient." | 約 10 |
 
-這個例子可節省 **75%**。對本來就寫得相對精簡的開發者 prompt，常見節省幅度通常是 **30–50%**。
+在這個刻意塞滿填充詞的例子裡可節省 **75%**，而且模型對兩種寫法的理解一樣好。對本來就寫得相對精簡的開發者 prompt，常見節省幅度通常是 **30–50%**。
 
 **常見模式：** `[物件] [動作] [原因]。[下一步]`
 
@@ -48,14 +48,14 @@
 
 ### Lite：專業但精簡
 
-刪掉填充詞與保留語氣，但保留冠詞與完整句子。
+刪掉填充詞與模糊保留，但保留冠詞與完整句子。
 
 ```text
 "Your component re-renders because you create a new object reference
 each render. Wrap it in useMemo."
 ```
 
-適合：對外文件、需要完整清晰表達的情境。
+約 20 tokens。適合：對外文件、新人上手文件、需要完整清晰表達的情境。
 
 ### Full：經典原始人模式（預設）
 
@@ -66,7 +66,7 @@ each render. Wrap it in useMemo."
 Wrap in useMemo."
 ```
 
-適合：日常開發、多數 Copilot 互動。
+約 18 tokens。適合：日常開發、多數 Copilot 互動。
 
 ### Ultra：最大壓縮
 
@@ -76,7 +76,11 @@ Wrap in useMemo."
 "Inline obj prop → new ref → re-render. useMemo."
 ```
 
-適合：高頻互動、你對領域非常熟時。
+約 10 tokens。適合：高頻互動、你對領域非常熟時。
+
+**估計各等級的節省幅度：**
+
+> **輸入 vs 輸出：** 輸入節省來自把 prompt 寫精簡；輸出節省則來自在 system instructions（例如 `copilot-instructions.md`）設定精簡輸出。把 prompt 寫精簡，並不會自動讓模型用精簡方式回答，兩者都要設。
 
 | 等級 | 輸入節省 | 輸出節省† | 品質影響 |
 |------|----------|-----------|----------|
@@ -112,7 +116,7 @@ Validate:
 Save to DB
 ```
 
-結構化寫法通常更省，也更清楚。
+**可節省約 36%**，而且結構化版本可以說更清楚，因為它逼你把各項需求分開列。
 
 ## 2.1.4 縮寫與簡寫
 
