@@ -28,20 +28,40 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 nav:
-  - Home: index.md
-  - Part 1:
-      - Why Tokens Matter: 01-why-tokens-matter.md
-  - Part 2:
-      - Prompt Compression: 02-prompt-compression.md
-      - Language Comparison: 03-language-comparison.md
-      - Context Management: 04-context-management.md
-      - Output Control: 05-output-control.md
-      - Workflow Optimization: 06-workflow-optimization.md
-      - Always-On Context Problem: 07-agents-md-problem.md
-      - MCP & Tool Costs: 08-mcp-tool-costs.md
-  - Part 3:
-      - Comparisons & Data: 09-comparisons-data.md
-  - Part 4:
-      - Practical Setup: 10-practical-setup.md
-      - Model Selection & Pricing: 11-models-and-pricing.md
-      - Enterprise Governance: 12-enterprise-governance.md
+  - Home:
+      - English: index.md
+      - 繁體中文（台灣）: index.zh-TW.md
+  - English Guide:
+      - Part 1:
+          - Why Tokens Matter: 01-why-tokens-matter.md
+      - Part 2:
+          - Prompt Compression: 02-prompt-compression.md
+          - Language Comparison: 03-language-comparison.md
+          - Context Management: 04-context-management.md
+          - Output Control: 05-output-control.md
+          - Workflow Optimization: 06-workflow-optimization.md
+          - Always-On Context Problem: 07-agents-md-problem.md
+          - MCP & Tool Costs: 08-mcp-tool-costs.md
+      - Part 3:
+          - Comparisons & Data: 09-comparisons-data.md
+      - Part 4:
+          - Practical Setup: 10-practical-setup.md
+          - Model Selection & Pricing: 11-models-and-pricing.md
+          - Enterprise Governance: 12-enterprise-governance.md
+  - 繁體中文指南:
+      - Part 1:
+          - 為什麼 Token 很重要: 01-why-tokens-matter.zh-TW.md
+      - Part 2:
+          - Prompt 壓縮: 02-prompt-compression.zh-TW.md
+          - 語言比較: 03-language-comparison.zh-TW.md
+          - Context 管理: 04-context-management.zh-TW.md
+          - 輸出控制: 05-output-control.zh-TW.md
+          - Workflow 最佳化: 06-workflow-optimization.zh-TW.md
+          - Always-On Context 問題: 07-agents-md-problem.zh-TW.md
+          - MCP 與工具成本: 08-mcp-tool-costs.zh-TW.md
+      - Part 3:
+          - 比較與數據: 09-comparisons-data.zh-TW.md
+      - Part 4:
+          - 實際設定: 10-practical-setup.zh-TW.md
+          - 模型選擇與定價: 11-models-and-pricing.zh-TW.md
+          - 企業治理: 12-enterprise-governance.zh-TW.md

@@ -1,5 +1,7 @@
 # 2.7 Tool & MCP Server Costs — The Hidden Token Tax
 
+[English](08-mcp-tool-costs.md) | [繁體中文（台灣）](08-mcp-tool-costs.zh-TW.md)
+
 [← Back to Guide](index.md)
 
 ---

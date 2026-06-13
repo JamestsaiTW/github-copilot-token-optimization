@@ -1,5 +1,7 @@
 # Enterprise Governance for Copilot Cost Control
 
+[English](12-enterprise-governance.md) | [繁體中文（台灣）](12-enterprise-governance.zh-TW.md)
+
 [← Back to Guide](index.md)
 
 ---

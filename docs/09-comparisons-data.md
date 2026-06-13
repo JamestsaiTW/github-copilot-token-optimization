@@ -1,5 +1,7 @@
 # Part 3: Comparisons & Data
 
+[English](09-comparisons-data.md) | [繁體中文（台灣）](09-comparisons-data.zh-TW.md)
+
 [← Back to Guide](index.md)
 
 ---

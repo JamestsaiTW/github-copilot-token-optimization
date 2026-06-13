@@ -1,5 +1,7 @@
 # Model Selection & Pricing
 
+[English](11-models-and-pricing.md) | [繁體中文（台灣）](11-models-and-pricing.zh-TW.md)
+
 [← Back to Guide](index.md)
 
 ---
