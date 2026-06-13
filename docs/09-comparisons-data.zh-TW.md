@@ -99,6 +99,37 @@
 再往後 20% 也通常很划算。  
 超過那個點後，每多壓一點，都更可能帶來誤解。
 
+<div class="guide-visual" role="img" aria-label="壓縮節省與品質風險的關係圖">
+  <p class="guide-visual__title">效益與風險曲線</p>
+  <div class="guide-visual__curve">
+    <div class="guide-visual__curve-row">
+      <span class="guide-visual__curve-label">品質</span>
+      <div class="guide-visual__curve-bar">
+        <div class="guide-visual__curve-fill" style="width: 82%;"></div>
+      </div>
+    </div>
+    <div class="guide-visual__curve-row">
+      <span class="guide-visual__curve-label">風險</span>
+      <div class="guide-visual__curve-bar">
+        <div class="guide-visual__curve-fill guide-visual__curve-fill--risk" style="width: 62%;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="guide-visual__scale">
+    <span>0%</span>
+    <span>20%</span>
+    <span>40%</span>
+    <span>60%</span>
+    <span>80%</span>
+  </div>
+  <div class="guide-visual__ticks">
+    <span>lite</span>
+    <span>full</span>
+    <span>ultra</span>
+    <span>extreme</span>
+  </div>
+</div>
+
 **建議甜蜜點：** Full caveman。
 
 ---

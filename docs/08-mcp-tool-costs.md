@@ -55,17 +55,24 @@ This isn't free. Each tool definition costs approximately:
 
 Here's where it gets expensive:
 
-```text
-Tools loaded = servers × tools_per_server × tokens_per_tool
-
-Example (heavy setup):
-  10 MCP servers × 5 tools each × 200 tokens avg = 10,000 tokens
-
-Agent mode runs 5-25 steps per task.
-Tool definitions reload EVERY step.
-
-10,000 tokens × 15 steps = 150,000 tokens just for tool definitions.
-```
+<div class="guide-visual" role="img" aria-label="Tool definition cost multiplies across servers, tools, and agent steps">
+  <p class="guide-visual__title">Reloaded Tool Cost</p>
+  <div class="guide-visual__grid guide-visual__grid--2">
+    <section class="guide-visual__card">
+      <h4>Formula</h4>
+      <p class="guide-visual__math">Tools loaded = servers x tools_per_server x tokens_per_tool</p>
+      <p class="guide-visual__note">That whole bundle reloads on every agent step.</p>
+    </section>
+    <section class="guide-visual__card">
+      <h4>Heavy setup example</h4>
+      <p class="guide-visual__math">10 MCP servers x 5 tools x 200 tokens = 10,000 tokens</p>
+      <div class="guide-visual__flow">
+        <p class="guide-visual__math">10,000 tokens x 15 steps</p>
+      </div>
+      <p class="guide-visual__metric">150,000 tokens</p>
+    </section>
+  </div>
+</div>
 
 That's 150K tokens doing nothing but telling the agent what tools exist. Before any actual work happens.
 

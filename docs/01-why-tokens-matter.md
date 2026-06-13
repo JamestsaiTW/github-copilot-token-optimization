@@ -51,23 +51,29 @@ Every token you send or receive has a cost. Here's how:
 
 Understanding what Copilot does behind the scenes helps you optimize:
 
-```text
-┌─────────────────────────────────────────────────┐
-│                 Context Window                  │
-│                                                 │
-│  ┌──────────────────┐  ┌─────────────────────┐  │
-│  │  INPUT TOKENS    │  │  OUTPUT TOKENS      │  │
-│  │                  │  │                     │  │
-│  │  System prompt   │  │  The response       │  │
-│  │  + copilot-      │  │  you receive        │  │
-│  │    instructions  │  │                     │  │
-│  │  + file context  │  │                     │  │
-│  │  + conversation  │  │                     │  │
-│  │    history       │  │                     │  │
-│  │  + YOUR prompt   │  │                     │  │
-│  └──────────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────┘
-```
+<div class="token-context-diagram" role="img" aria-label="Context window containing input tokens and output tokens">
+  <div class="token-context-diagram__frame">
+    <p class="token-context-diagram__title">Context Window</p>
+    <div class="token-context-diagram__columns">
+      <section class="token-context-diagram__panel">
+        <h3>Input tokens</h3>
+        <ul>
+          <li>System prompt</li>
+          <li><code>copilot-instructions.md</code></li>
+          <li>File context</li>
+          <li>Conversation history</li>
+          <li>Your prompt</li>
+        </ul>
+      </section>
+      <section class="token-context-diagram__panel token-context-diagram__panel--output">
+        <h3>Output tokens</h3>
+        <div class="token-context-diagram__panel-body">
+          <p>The response you receive</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
 
 - **System prompt:** Copilot's own instructions (you can't control this)
 - **`copilot-instructions.md`:** Your project-level instructions — loaded on **every** interaction
