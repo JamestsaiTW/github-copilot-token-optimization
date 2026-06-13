@@ -2,7 +2,7 @@
 
 [English](10-practical-setup.md) | [繁體中文（台灣）](10-practical-setup.zh-TW.md)
 
-[← Back to Guide](index.md)
+[← Back to Guide](index.en.md)
 
 ---
 

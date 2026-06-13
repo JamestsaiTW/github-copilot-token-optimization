@@ -2,7 +2,7 @@
 
 [English](03-language-comparison.md) | [繁體中文（台灣）](03-language-comparison.zh-TW.md)
 
-[← Back to Guide](index.md)
+[← Back to Guide](index.en.md)
 
 ---
 

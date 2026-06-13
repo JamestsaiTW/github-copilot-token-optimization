@@ -1,64 +1,64 @@
-# Token Optimization Guide
+# Token 最佳化指南
 
-[English](index.md) | [繁體中文（台灣）](index.zh-TW.md)
+[English](index.en.md) | [繁體中文（台灣）](index.md)
 
-Practical guide to reducing GitHub Copilot token spend while keeping answers and code useful.
+實務導向的 GitHub Copilot token 成本降低指南，同時維持回答與程式碼的實用性。
 
-[Start with Part 1](01-why-tokens-matter.md){ .md-button .md-button--primary }
-[Jump to Practical Setup](10-practical-setup.md){ .md-button }
+[從 Part 1 開始](01-why-tokens-matter.zh-TW.md){ .md-button .md-button--primary }
+[直接看實際設定](10-practical-setup.zh-TW.md){ .md-button }
 
-## What This Covers
+## 這份指南涵蓋什麼
 
-- Why token usage actually costs money under Usage-Based Billing
-- Why output control usually beats prompt compression on raw ROI
-- How to shrink always-on context, history, and tool overhead
-- How model-specific prompt guides improve first-pass quality and reduce rework
-- When Ask Mode, Edit Mode, and Agent Mode make financial sense
-- How to set enterprise guardrails without relying on unsupported controls
-- How to turn this repo into repeatable team habits
+- 為什麼在 Usage-Based Billing 下，token 真的會影響成本
+- 為什麼輸出控制通常比 prompt 壓縮更有直接 ROI
+- 如何縮小 always-on context、歷史訊息與工具負擔
+- 為什麼依模型調整 prompt guide 能提升第一次回答品質並減少返工
+- Ask、Edit、Agent Mode 分別何時最划算
+- 如何建立企業治理，而不是依賴未被官方支援的控制方式
+- 如何把這些做法變成可重複的團隊習慣
 
-## Fastest Wins
+## 最快見效的做法
 
-1. Constrain output by default: `Code only, no explanation.` and `No explanations unless asked.`
-2. Keep `.github/copilot-instructions.md` small and specific.
-3. Use Ask Mode for questions that do not need tools.
-4. Retune prompts and instructions against the official guide for your target model.
-5. Disable MCP servers you are not using.
-6. Convert DOCX/PDF/Office/media inputs to Markdown before AI work; start with [MarkItDown](https://github.com/microsoft/markitdown).
-7. Audit long-running agent sessions and repeated back-and-forth.
-8. Install [RTK](https://github.com/rtk-ai/rtk) — CLI proxy that filters `git`, test runners, `grep`, and 100+ other shell commands before output reaches the agent. One install, 60-90% savings on tool-call results in agent and coding-agent sessions.
+1. 預設限制輸出：`Code only, no explanation.` 與 `No explanations unless asked.`
+2. 讓 `.github/copilot-instructions.md` 保持小而精準。
+3. 不需要工具的問題就用 Ask Mode。
+4. 依目標模型的官方指南重調 prompts 與 instructions。
+5. 停用沒在用的 MCP servers。
+6. 先把 DOCX／PDF／Office／媒體輸入轉成 Markdown 再做 AI 工作；優先試 [MarkItDown](https://github.com/microsoft/markitdown)。
+7. 稽核長時間 agent sessions 與重複來回澄清。
+8. 安裝 [RTK](https://github.com/rtk-ai/rtk)，壓縮 shell 指令輸出。
 
-## Read by Topic
+## 依主題閱讀
 
-### Foundations
+### 基礎篇（Foundations）
 
-- [Why Tokens Matter](01-why-tokens-matter.md)
-- [Comparisons & Data](09-comparisons-data.md)
+- [為什麼 Token 很重要](01-why-tokens-matter.zh-TW.md)
+- [比較與數據](09-comparisons-data.zh-TW.md)
 
-### Techniques
+### 技巧篇（Techniques）
 
-- [Context Management](04-context-management.md)
-- [Output Control](05-output-control.md)
-- [Workflow Optimization](06-workflow-optimization.md)
-- [MCP & Tool Costs](08-mcp-tool-costs.md)
+- [Context 管理](04-context-management.zh-TW.md)
+- [輸出控制](05-output-control.zh-TW.md)
+- [Workflow 最佳化](06-workflow-optimization.zh-TW.md)
+- [MCP 與工具成本](08-mcp-tool-costs.zh-TW.md)
 
-### Implementation
+### 實作篇（Implementation）
 
-- [Practical Setup](10-practical-setup.md)
-- [Model Selection & Pricing](11-models-and-pricing.md)
-- [Enterprise Governance](12-enterprise-governance.md)
+- [實際設定](10-practical-setup.zh-TW.md)
+- [模型選擇與定價](11-models-and-pricing.zh-TW.md)
+- [企業治理](12-enterprise-governance.zh-TW.md)
 
-## Quick Terms
+## 快速詞彙
 
-- **UBB**: usage-based billing. Copilot Business and Enterprise spend is tracked through AI-credit usage rather than request counters.
-- **AI credits**: the pooled billing unit used after the cutover.
-- **Auto mode**: Copilot's default model selector. Good default lane when you do not need to pin a model.
-- **Ask Mode**: single-shot interaction. Lowest-overhead choice for simple questions.
-- **Agent Mode**: multi-step interaction. Higher leverage, higher cost.
-- **Content Exclusion**: admin control for keeping selected repo content out of Copilot context.
-- **Format tax**: extra tokens from rich file metadata and layout noise in DOCX, PDF, HTML, slides, spreadsheets, images, and audio/video extraction. Convert to Markdown first.
+- **UBB**：usage-based billing。Copilot Business 與 Enterprise 的花費會透過 AI credit 用量計算。
+- **AI credits**：切換後的共用計費單位。
+- **Auto mode**：Copilot 預設模型選擇器。多數情境下是合理的預設通道。
+- **Ask Mode**：單次互動。最省成本。
+- **Agent Mode**：多步驟互動。槓桿高，但成本也高。
+- **Content Exclusion**：管理員用來讓特定 repo 內容不進 Copilot context 的控制項。
+- **格式稅**：DOCX、PDF、HTML、投影片、試算表、圖片、音訊／影片抽取內容中，多出來的版面、標記與中繼資料 token。先轉成 Markdown。
 
-## Useful Links
+## 實用連結
 
 - [Official GitHub Copilot docs](https://docs.github.com/copilot)
 - [Usage-based billing for organizations and enterprises](https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-organizations-and-enterprises)
@@ -67,11 +67,11 @@ Practical guide to reducing GitHub Copilot token spend while keeping answers and
 - [LLMLingua](https://github.com/microsoft/LLMLingua)
 - [Caveman project](https://github.com/JuliusBrussee/caveman)
 - [RTK — Rust Token Killer](https://github.com/rtk-ai/rtk)
-- [Microsoft MarkItDown](https://github.com/microsoft/markitdown) — convert PDF, Office files, images, audio, HTML, ZIP contents, YouTube URLs, EPUBs, and more to Markdown for LLM workflows
-- [Marc Bara: "Your .docx Is Wasting 33% of Your AI Budget"](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042)
-- [Dina Berry: "How I Cut Token Usage from 52% to 13%"](https://dfberry.github.io/2026-05-06-tuning-up-copilot-context) — real measured numbers from a Copilot CLI production setup (Microsoft/GitHub content contributor)
+- [Microsoft MarkItDown](https://github.com/microsoft/markitdown) — 把 PDF、Office 檔、圖片、音訊、HTML、ZIP 內容、YouTube URL、EPUB 等轉成適合 LLM 工作流的 Markdown
+- [Marc Bara：Your .docx Is Wasting 33% of Your AI Budget](https://medium.com/@marc.bara.iniesta/your-docx-is-wasting-33-of-your-ai-budget-86a3d229d042)
+- [Dina Berry：How I Cut Token Usage from 52% to 13%](https://dfberry.github.io/2026-05-06-tuning-up-copilot-context)
 
-## Notes
+## 備註
 
-- `/chronicle` (full, all subcommands) is **Copilot CLI**. `/chronicle:tips` is also available in **VS Code**.
-- Usage-Based Billing is labeled **UBB** in this repo.
+- 完整 `/chronicle` 是 **Copilot CLI** 功能；`/chronicle:tips` 也可在 **VS Code** 使用。
+- 本 repo 中的 Usage-Based Billing 縮寫為 **UBB**。

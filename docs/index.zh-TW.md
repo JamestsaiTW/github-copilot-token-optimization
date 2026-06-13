@@ -1,6 +1,6 @@
 # Token 最佳化指南
 
-[English](index.md) | [繁體中文（台灣）](index.zh-TW.md)
+[English](index.en.md) | [繁體中文（台灣）](index.md)
 
 實務導向的 GitHub Copilot token 成本降低指南，同時維持回答與程式碼的實用性。
 
@@ -30,23 +30,23 @@
 
 ## 依主題閱讀
 
-### Foundations
+### 基礎篇（Foundations）
 
-- [Why Tokens Matter](01-why-tokens-matter.zh-TW.md)
-- [Comparisons & Data](09-comparisons-data.zh-TW.md)
+- [為什麼 Token 很重要](01-why-tokens-matter.zh-TW.md)
+- [比較與數據](09-comparisons-data.zh-TW.md)
 
-### Techniques
+### 技巧篇（Techniques）
 
-- [Context Management](04-context-management.zh-TW.md)
-- [Output Control](05-output-control.zh-TW.md)
-- [Workflow Optimization](06-workflow-optimization.zh-TW.md)
-- [MCP & Tool Costs](08-mcp-tool-costs.zh-TW.md)
+- [Context 管理](04-context-management.zh-TW.md)
+- [輸出控制](05-output-control.zh-TW.md)
+- [Workflow 最佳化](06-workflow-optimization.zh-TW.md)
+- [MCP 與工具成本](08-mcp-tool-costs.zh-TW.md)
 
-### Implementation
+### 實作篇（Implementation）
 
-- [Practical Setup](10-practical-setup.zh-TW.md)
-- [Model Selection & Pricing](11-models-and-pricing.zh-TW.md)
-- [Enterprise Governance](12-enterprise-governance.zh-TW.md)
+- [實際設定](10-practical-setup.zh-TW.md)
+- [模型選擇與定價](11-models-and-pricing.zh-TW.md)
+- [企業治理](12-enterprise-governance.zh-TW.md)
 
 ## 快速詞彙
 

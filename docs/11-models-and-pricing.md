@@ -2,7 +2,7 @@
 
 [English](11-models-and-pricing.md) | [繁體中文（台灣）](11-models-and-pricing.zh-TW.md)
 
-[← Back to Guide](index.md)
+[← Back to Guide](index.en.md)
 
 ---
 
@@ -150,7 +150,7 @@ Use user-level AI credit budgets when you need a direct per-user cap. Remember t
 - [Practical Setup § Reasoning Effort](10-practical-setup.md#reasoning-effort-another-lever) — the deeper treatment of effort levels
 - [Workflow Optimization](06-workflow-optimization.md) — why Auto is still the best default
 - [Enterprise Governance](12-enterprise-governance.md) — budgets, user-level caps, model policy, instruction scope
-- [Home](index.md#quick-terms) — quick terms and supporting links
+- [Home](index.en.md#quick-terms) — quick terms and supporting links
 
 ---
 
