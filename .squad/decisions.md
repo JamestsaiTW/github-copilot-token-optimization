@@ -196,6 +196,13 @@
 - Cleanup stays semantic, not just structural: docs and plugin metadata must stop advertising shipped installable skills.
 - Validation target stays bounded: live `rg` and filesystem checks must pass; strict MkDocs build remains desirable but may be blocked if `mkdocs` is unavailable.
 
+### 2026-06-17: Token Recommendations Placement
+
+**Author:** Hermes | **Status:** Active | **Requested by:** Marco Olivo
+
+- Placed RTK Windows caution in MCP/tool-cost sections, VS Code extension/profile and custom-agent guidance in MCP/practical setup, model-switch cache risk in model-pricing anti-patterns, and Copilot CLI AIC value-framing in habit-building maintenance.
+- Each recommendation now sits beside the mechanism it affects, avoiding a new page and keeping README changes limited to high-impact quick-start nudges.
+
 ## Governance
 
 - All meaningful changes require team consensus

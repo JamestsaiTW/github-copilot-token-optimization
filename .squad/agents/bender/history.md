@@ -97,3 +97,7 @@
 - Hermes completed the semantic cleanup, not just file removal: plugin metadata now advertises the guide + agent surface, repo docs no longer teach repo-local skill installation, and late Part 4 numbering is contiguous again.
 - Live filesystem and `rg` checks satisfied the main acceptance criteria: no top-level `skills/`, no `skills-lock.json`, and one canonical image copy under `docs/assets/`.
 - Remaining gap is environmental, not yet a content failure: strict MkDocs build still cannot be executed here because `mkdocs` is not installed.
+
+### 2026-06-17: Token Recommendation Placement Review — Approved
+
+- Hermes placed RTK Windows cautions, VS Code extension/profile cleanup, custom-agent cost control, model-switch risk, and Copilot CLI AIC value framing in natural locations without overstating hidden internals or exact billing math.

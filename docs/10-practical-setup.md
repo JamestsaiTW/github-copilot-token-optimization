@@ -297,7 +297,9 @@ Mock: external services only. No impl mocking.
 Coverage: branch coverage ≥80%.
 ```
 
-Focused agents carry less instruction overhead than a general-purpose instruction set.
+Focused agents carry less instruction overhead than a general-purpose instruction set. They also give you a stable control surface: the same task profile can declare the tools it is allowed to use, the instructions it carries, and, where your Copilot surface supports it, the model it should use. For repeat coding workflows, prefer a focused custom agent over the default agent when you care about predictable cost. The default agent inherits more of the current environment: active tools, extension-provided surfaces, and whatever model is currently selected.
+
+Keep the tool list narrow. This repo's `agents/token-saver.agent.md` is the pattern: built-in `bash`, `edit`, and `view`; no duplicate filesystem MCP; terse output rules; explicit tool minimization.
 
 ### 4.3.6 Compress Shell Command Output with RTK
 
@@ -317,6 +319,8 @@ rtk init --copilot
 
 RTK installs a PreToolUse hook into the current repository. Repeat per repo — there is no global VS Code Copilot install. Once active, the hook is transparent: your terminal is unchanged; only the agent's Bash tool calls are intercepted.
 
+On Windows, validate RTK before recommending it to a team. The hook path can be more fragile across PowerShell, Git Bash, WSL, and VS Code agent execution. If RTK adds setup friction or command failures, skip it and focus first on clean profiles, fewer MCP servers, precise prompts, and shorter command output.
+
 Commands with verbose output (test failures, large diffs) see the biggest reductions. Short-output commands see smaller gains. Actual savings depend on your project's output volume.
 
 Combine with `copilot-setup-steps.yml` (§4.3.2) and precise issue descriptions (§4.3.3) for maximum session efficiency. Full setup, command list, and other AI tool support: [MCP & Tool Costs §2.7.7](08-mcp-tool-costs.md#277-compress-tool-output-at-the-source-rtk).
@@ -335,8 +339,10 @@ Combine with `copilot-setup-steps.yml` (§4.3.2) and precise issue descriptions 
 - Review your `copilot-instructions.md` — has it grown? Compress it back down
 - Check if any memory files have gotten verbose — compress them back down
 - Audit which files are habitually open in your editor — close ones you're not working on (open tabs auto-feed context)
+- Audit VS Code profiles and extensions — disable extensions that inject AI skills, agents, MCP servers, or tools unless the current repo needs them
 - (Business/Enterprise) Review repository / org **Content Exclusion** settings for new sensitive paths
 - Check your model usage — are you pinning high-effort models for tasks Auto would route to a cheaper tier?
+- In Copilot CLI, watch the bottom-right **AIC** counter. Divide by 100 for the approximate dollar value, then ask whether the output saved more time or cost than it consumed. If spend is high for weak output, treat that as feedback on prompt scope, context size, tool count, or model choice
 - Review budgets, user-level caps, and model policies before expanding premium access further
 - When default model changes, retune prompts/instructions against that provider's current prompting guide
 - Check token usage by user/team — are agents and power users driving outsized consumption? See [Enterprise Governance](12-enterprise-governance.md)
@@ -460,6 +466,8 @@ Relevant settings that affect agent token usage:
 ```
 
 **`maxRequests`** caps how many tool-call requests the agent can make. Lower = fewer tokens, but the agent might not finish complex tasks. Start at 10-15, increase only when needed.
+
+For repeat workflows, pair this with a custom agent profile and a clean VS Code profile. Disable extensions that inject skills, agents, MCP servers, or tool surfaces you do not need for coding. The most predictable setup is boring: one focused agent, one intended model, and only the tools required for the repo.
 
 ### 4.5.5 Custom Instructions for Agent Efficiency
 

@@ -18,7 +18,7 @@ Free Space:    55.3k (28%)
 Buffer:        40.4k (20%)
 ```
 
-**VS Code Copilot:** no equivalent command, but you can estimate your `System/Tools` baseline by counting active MCP servers × tools × ~200 tokens average (see §2.7.2).
+**VS Code Copilot:** no equivalent command, but you can estimate your `System/Tools` baseline by counting active MCP servers × tools × ~200 tokens average (see §2.7.2). Also audit extensions that add skills, agents, MCP servers, or tool surfaces. If an extension injects tools you do not need for coding, disable it for that workspace or move coding work into a VS Code profile with only the essentials enabled.
 
 **The critical distinction — always-loaded vs. on-demand:**
 
@@ -151,6 +151,8 @@ Don't enable every MCP server globally. Use workspace-level configuration:
 
 **The rule:** If you don't need it for the current task, disable it. You can always re-enable it later. Every idle MCP server costs tokens on every agent step.
 
+**VS Code extensions count too.** MCP servers are the obvious source of tool schemas, but some extensions also add skills, chat participants, agent profiles, or tool surfaces that can appear in the AI context. For cost-sensitive coding sessions, keep a lean VS Code profile: core language tooling, GitHub Copilot, and only the MCP/tools needed for that repo. Disable everything else at the workspace or profile level.
+
 ## 2.7.6 Practical Guidance
 
 1. **Audit your MCP servers** — run through your enabled servers. Do you actually use all of them? Disable the rest
@@ -160,7 +162,8 @@ Don't enable every MCP server globally. Use workspace-level configuration:
 5. **Custom instructions help** — add "Minimize tool calls. Read files only when necessary." to reduce call frequency
 6. **Use skills instead of MCPs for occasional capabilities** — MCP tool schemas load on every step whether used or not. Skills load only title and description upfront; the full content pulls on demand. If a capability is used in fewer than half your sessions, a skill is cheaper. See [Practical Setup §4.2](10-practical-setup.md#mcps-vs-skills-eager-vs-lazy-context-loading) for the full comparison
 7. **Optional, Copilot CLI only: try CodeAct for long tool chains** — external plugin [`copilot-codeact-plugin`](https://github.com/jsturtevant/copilot-codeact-plugin) collapses many small tool hops into one sandboxed execution. That does not shrink any one server's schema, but it can reduce how often the full tool catalog gets replayed on CLI-heavy tasks
-8. **Compress tool output at the source with RTK** — [RTK (Rust Token Killer)](https://github.com/rtk-ai/rtk) is a CLI proxy that filters the *results* of shell commands before they reach the agent. Confirmed to work well in VS Code Copilot (repo-by-repo setup). Reductions are real but vary by command and project output volume. See §2.7.7
+8. **Use a focused custom agent for repeat coding workflows** — a custom agent can carry a narrow tool list and stable instructions, so the same coding workflow starts with the same active surface instead of whatever the default chat currently exposes. Where your Copilot surface supports model selection in agent/profile files, pin the intended model there too
+9. **Compress tool output at the source with RTK** — [RTK (Rust Token Killer)](https://github.com/rtk-ai/rtk) is a CLI proxy that filters the *results* of shell commands before they reach the agent. Confirmed to work well in VS Code Copilot on macOS/Linux with repo-by-repo setup. Treat Windows as experimental and validate before rolling it out broadly. Reductions are real but vary by command and project output volume. See §2.7.7
 
 ## 2.7.7 Compress Tool Output at the Source: RTK
 
@@ -197,6 +200,8 @@ brew install rtk
 # Linux / macOS
 curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
 ```
+
+**Windows caveat:** RTK is strongest today on Unix-like shell paths. On Windows, shell-hook behavior and path handling can be brittle, especially across PowerShell, Git Bash, WSL, and VS Code agent execution. Treat it as a pilot, not a default recommendation: test it on the exact repo and shell your team uses, and skip it if the setup causes command failures or noisy behavior.
 
 **Setting up for VS Code Copilot — per-repo:**
 

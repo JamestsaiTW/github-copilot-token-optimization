@@ -99,7 +99,7 @@ Keep the claim bounded: this guide is **not** benchmarking CodeAct itself. The p
 
 CodeAct reduces the *number* of tool calls. [**RTK (Rust Token Killer)**](https://github.com/rtk-ai/rtk) reduces the *size* of each tool call's result. They address different sides of the same problem and can be used together.
 
-RTK is a CLI proxy that intercepts `git`, `cargo test`, `grep`, `ls`, and 100+ other dev commands and compresses their output before it reaches the agent — 60–90% savings per command. Unlike CodeAct, RTK works in all Copilot surfaces (VS Code, CLI, and other AI tools), not just Copilot CLI. See [MCP & Tool Costs §2.7.7](08-mcp-tool-costs.md#277-compress-tool-output-at-the-source-rtk) for setup and the full command list.
+RTK is a CLI proxy that intercepts `git`, `cargo test`, `grep`, `ls`, and 100+ other dev commands and compresses their output before it reaches the agent — 60–90% savings per command. Unlike CodeAct, RTK is not limited to Copilot CLI; it can help across Copilot surfaces when the shell hook is reliable. Treat Windows setups as a pilot, not a default rollout. See [MCP & Tool Costs §2.7.7](08-mcp-tool-costs.md#277-compress-tool-output-at-the-source-rtk) for setup and the full command list.
 
 ## 2.5.4 Default to Auto Model Selection
 

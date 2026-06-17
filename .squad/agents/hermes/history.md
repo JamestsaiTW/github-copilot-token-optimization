@@ -9,6 +9,13 @@
 
 ## Learnings
 
+### 2026-06-17: Placement for Tool, Profile, Model-Switch, and AIC Recommendations
+
+- Added RTK Windows caveat beside existing RTK setup, not as a new technique. Readers need the warning where they copy commands.
+- Extension/profile cleanup belongs with MCP/tool costs and practical agent setup because extension-injected tools behave like hidden context surface.
+- Model mid-chat switching belongs in model-pricing anti-patterns with careful cache/history wording; avoid claiming fixed implementation internals.
+- Copilot CLI AIC counter fits habit-building/monthly maintenance: value framing is a behavior loop, not a setup prerequisite.
+
 ### 2026-04-14: Wrote TOKEN-OPTIMIZATION-GUIDE.md (v1)
 
 - 1107 lines. Followed Leela's outline (5 parts), filled with Farnsworth's data.
