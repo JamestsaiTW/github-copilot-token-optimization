@@ -9,6 +9,13 @@
 
 ## Learnings
 
+### 2026-06-19: Governance Cohorts and FinOps Automation
+
+- Updated `docs/12-enterprise-governance.md` with spend-cohort guidance: export historical Copilot billing/usage CSVs, upload to Copilot Billing Preview, then map power/high/baseline/low usage cohorts to budget defaults and review paths.
+- Added `amgdy/copilot-finops-automation` as an admin-scale option for Copilot FinOps-as-code: reviewed YAML config, schema validation, dry runs, idempotent budget apply, cost-center membership sync, audit reports, and private-config caveat.
+- Made a tiny `README.md` guide-summary update so Enterprise Governance mentions spend cohorts and FinOps-as-code automation.
+
+
 ### 2026-06-17: Placement for Tool, Profile, Model-Switch, and AIC Recommendations
 
 - Added RTK Windows caveat beside existing RTK setup, not as a new technique. Readers need the warning where they copy commands.

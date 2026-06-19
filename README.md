@@ -107,7 +107,7 @@ Dedicated page on models, PRU-era multiplier history, current Auto guidance, pla
 
 ### Part 4.3: Enterprise Governance
 
-Dedicated chapter for customer-facing admin guidance: usage-based billing guardrails, AI-credit budgets, per-user tightening, model-access policy, org-level instructions, and when separate organizations are worth the overhead.
+Dedicated chapter for customer-facing admin guidance: usage-based billing guardrails, AI-credit budgets, spend cohorts, FinOps-as-code automation, model-access policy, org-level instructions, and separate-organization tradeoffs.
 
 → **[Read Part 4.3](docs/12-enterprise-governance.md)**
 

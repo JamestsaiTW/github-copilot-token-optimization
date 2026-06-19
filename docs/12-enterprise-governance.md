@@ -30,6 +30,10 @@ Key points from GitHub docs for Business and Enterprise after June 1:
 
 That budget system is the direct spend cap for AI-credit usage at enterprise, organization, cost-center, and user scope.
 
+If budget and cost-center segmentation becomes hard to manage by hand, look at [`amgdy/copilot-finops-automation`](https://github.com/amgdy/copilot-finops-automation). It treats Copilot FinOps as code: one version-controlled YAML config defines AI-credit spend policies and team-to-cost-center mappings, then GitHub Actions validates the config, previews changes with dry runs, applies budgets idempotently, syncs team membership into cost centers, and writes audit/current-state reports.
+
+Why admins should care: reviewed pull requests beat ad hoc console edits, dry runs reduce mutation risk, scheduled reconciliation catches drift, and cost-center or user-level budget materialization gives tighter segmentation for teams with different spend patterns. Use a private repo or private fork for live enterprise config; keep real enterprise slugs, teams, cost centers, user logins, budget numbers, reports, logs, and tokens out of public branches.
+
 Important caveat: budgets do **not** make prompts smaller. They do **not** reduce tokens per prompt. They cap AI-credit spend.
 
 Practical default:
@@ -52,6 +56,15 @@ Practical pattern:
 1. baseline group gets a low user-level AI-credit budget
 2. power users get more only with clear job need
 3. monthly review: downgrade users whose usage does not justify the extra cost
+
+Build cohorts from actual spend, not guesswork:
+
+1. download historical Copilot billing or usage CSVs from GitHub
+2. upload the CSV to [Copilot Billing Preview](https://copilot-billing-preview.github.com/)
+3. inspect the usage bands it surfaces, such as power users, high-usage users, baseline users, and low-usage users
+4. map those cohorts to different budget defaults, review cadence, and escalation paths
+
+Why this matters: admins should not give every developer the same AI-credit ceiling when the spend profile is visibly different. Cohorts let you keep broad access for normal users, protect budget for people doing real agent-heavy work, and catch inactive or low-value usage before it becomes a pooled-budget surprise.
 
 Post-June 1 admin tips:
 
@@ -136,18 +149,21 @@ Supplemental benchmarking can help when comparing model quality and price postur
 If you are preparing customers for the June 1 shift, do this first:
 
 1. move admin guidance from request counters to AI-credit budgets
-2. decide which users need tight user-level budgets and which teams can share a broader pooled budget
-3. review model availability before frontier models become direct AI-credit spend
-4. remind teams that code completions and next edit suggestions stay outside AI-credit billing
-5. watch long chat and agent workflows first because they become the fastest spend amplifiers
+2. build spend cohorts from historical CSVs before assigning user-level or pooled budgets
+3. decide which users need tight user-level budgets and which teams can share a broader pooled budget
+4. review model availability before frontier models become direct AI-credit spend
+5. remind teams that code completions and next edit suggestions stay outside AI-credit billing
+6. watch long chat and agent workflows first because they become the fastest spend amplifiers
 
 ## Recommended Enterprise Default
 
 1. use Auto as the default model path
 2. set budgets before broad rollout
-3. use user-level AI credit budgets when you need tighter per-user control
-4. review premium models before enablement
-5. keep repo instructions small so IDE workflows inherit the right defaults
-6. use separate org segmentation only if cost-center boundaries already support it
+3. segment users into spend cohorts from historical CSVs, then tune budget defaults by cohort
+4. use user-level AI credit budgets when you need tighter per-user control
+5. consider FinOps-as-code automation when manual cost-center and budget edits become risky
+6. review premium models before enablement
+7. keep repo instructions small so IDE workflows inherit the right defaults
+8. use separate org segmentation only if cost-center boundaries already support it
 
 This is boring on purpose. Cheap defaults first. Premium access by exception. Measurement before expansion.
