@@ -123,12 +123,20 @@ This is especially relevant when comparing a cheap reasoning-capable model at `m
 
 - Leaving an expensive premium model pinned for the whole session
 - Changing models mid-chat in a long session without thinking about accumulated context. Prior messages, tool results, and cacheable prefixes can still be part of the next request; switching into a higher-cost lane can make that carried context more expensive than starting fresh
+- Enabling/disabling MCP servers mid-thread in long sessions. Tool-surface changes often invalidate stable cached prefixes
+- Switching default/custom agent profiles mid-thread during expensive runs. Agent/profile changes can break cache continuity for the same conversation
 - Assuming Auto will escalate to Opus when a task gets hard
 - Using vendor API prices and Copilot pricing signals as if they were the same metric
 - Recommending a model without checking whether the plan includes it
 - Turning on every premium model for the whole org before checking who actually needs it
 
-**Model-switch rule:** choose the cost lane before the work starts. If you need to move from cheap/Auto to a premium model for a hard subtask, start a fresh chat with only the relevant summary and files. This preserves cache-friendly stability in the original session and avoids dragging a long low-value history into a higher-cost request. The exact billing implementation can change by surface and plan, so frame this as risk control rather than guaranteed repricing math.
+**Cache-protection rule:** choose the lane before work starts and hold it stable in long sessions:
+
+```text
+{ model, active MCP set, active agent/profile }
+```
+
+If you must change the lane (for example cheap/Auto to premium for a hard subtask), start a fresh chat with only the relevant summary and files. This preserves cache-friendly stability in the original session and avoids dragging long low-value history into a higher-cost request. The exact billing implementation can change by surface and plan, so frame this as risk control rather than guaranteed repricing math.
 
 ## Org Rollout Rule: Review Before Enablement
 

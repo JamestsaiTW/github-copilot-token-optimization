@@ -19,12 +19,13 @@ Practical guide to reducing GitHub Copilot token spend while keeping answers and
 
 1. Constrain output by default: `Code only, no explanation.` and `No explanations unless asked.`
 2. Keep `.github/copilot-instructions.md` small and specific.
-3. Use Ask Mode for questions that do not need tools.
-4. Retune prompts and instructions against the official guide for your target model.
-5. Disable MCP servers you are not using.
-6. Convert DOCX/PDF/Office/media inputs to Markdown before AI work; start with [MarkItDown](https://github.com/microsoft/markitdown).
-7. Audit long-running agent sessions and repeated back-and-forth.
-8. Install [RTK](https://github.com/rtk-ai/rtk) — CLI proxy that filters `git`, test runners, `grep`, and 100+ other shell commands before output reaches the agent. One install, 60-90% savings on tool-call results in agent and coding-agent sessions.
+3. Protect cache in long sessions: keep `{model, active MCP set, active agent/profile}` stable; if you must switch, start a fresh chat with a short handoff summary.
+4. Use Ask Mode for questions that do not need tools.
+5. Retune prompts and instructions against the official guide for your target model.
+6. Disable MCP servers you are not using.
+7. Convert DOCX/PDF/Office/media inputs to Markdown before AI work; start with [MarkItDown](https://github.com/microsoft/markitdown).
+8. Audit long-running agent sessions and repeated back-and-forth.
+9. Install [RTK](https://github.com/rtk-ai/rtk) — CLI proxy that filters `git`, test runners, `grep`, and 100+ other shell commands before output reaches the agent. One install, 60-90% savings on tool-call results in agent and coding-agent sessions.
 
 ## Read by Topic
 

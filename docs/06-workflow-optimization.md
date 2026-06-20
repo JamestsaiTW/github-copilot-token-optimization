@@ -113,6 +113,22 @@ The model picker is one of the highest-cost control surfaces in Copilot. Pinning
 
 Teams that switch their default from "always Sonnet" or "always Opus" to "Auto, override when needed" generally reduce spend because they stop defaulting every interaction into the higher-cost lane.
 
+### Cache-aware model workflow
+
+Model routing and caching must work together. In long expensive sessions, avoid changing your cost/control surface mid-thread:
+
+- do not switch model unless the task clearly changes
+- do not toggle MCP servers unless the task truly requires different tools
+- do not switch agent/profile mode in the same long thread
+
+Why: those controls live in the high, stable prefix of context. Changing them can invalidate cached prefixes and force reprocessing of large input blocks.
+
+Practical pattern:
+
+1. Pick lane at session start: `{model, agent/profile, MCP set}`.
+2. Keep lane stable while working that thread.
+3. If lane must change, start a fresh chat with a concise handoff summary.
+
 ## 2.5.5 Retune Prompts to the Target Model
 
 This is not prompt compression. It may not reduce tokens per request. It reduces total token use by improving first-pass quality, which cuts follow-up turns, repeated clarifications, and agent rework.

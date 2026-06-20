@@ -86,6 +86,22 @@ GitHub Copilot pricing depends on model choice and billing mode. Pick the model 
 
 **Never burn a high-effort model on a "what's the syntax for X" question** — you pay the higher token rate for an answer the cheapest model would have given you correctly.
 
+### Cache-protection rule for long sessions
+
+After you choose the lane for a long thread, keep it stable:
+
+```text
+{ model, active MCP set, active agent/profile }
+```
+
+Do not change those controls in the middle of an expensive conversation unless required. Mid-thread switches often invalidate cached prefixes and remove the cached-input discount you had built up.
+
+If a switch is required, do this instead:
+
+1. Capture a short handoff summary (decisions, constraints, next actions).
+2. Start a new chat with the new lane.
+3. Paste only the summary and required files.
+
 ### Step 5: Mix Models by Task (Model Routing)
 
 One useful cost lever: **use different models for different subtasks** within the same workflow. The detailed pricing context, historical multiplier references, plan availability, and official GitHub Docs links now live in [Model Selection & Pricing](11-models-and-pricing.md). Keep this section focused on the practical routing habit.

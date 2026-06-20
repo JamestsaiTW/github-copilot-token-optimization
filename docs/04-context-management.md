@@ -168,6 +168,8 @@ Most teams have it inverted — everything in always-on. Flipping the ratio cuts
 
 The cheapest token is the one the platform doesn't have to re-process. Modern Copilot interactions cache stable portions of context (system prompt, instruction files, recently-loaded files) so they don't pay the full input-token cost on every turn.
 
+In long sessions, this is often the biggest single cost lever. When most of your input is cache-hit input, effective input cost can drop dramatically (commonly cited as up to ~90% discount on cached input, depending on provider/model/surface billing rules).
+
 You can lean into this. Two practical patterns:
 
 **1. Stable instructions at the top, volatile work at the bottom.** Cached context only works if the prefix of your conversation is stable. Don't reshuffle your `copilot-instructions.md` or rotate which files are open between every prompt — keep the stable layer stable, and let only the most recent message change.
@@ -175,6 +177,30 @@ You can lean into this. Two practical patterns:
 **2. Reuse named context via slash commands and saved snippets.** When you frequently ask about the same domain, define it once and reference it. For example: keep a short customers-schema note or slash-command snippet, load it once for the session, then keep follow-up prompts anchored to that shared summary instead of re-pasting the schema every time.
 
 Caching gains are real and dual-purpose: **it's faster** (cached prefixes skip re-encoding) **and cheaper** (most platforms bill cached input tokens at a fraction of the standard rate). Designing your context layout for cache stability is one of the lowest-effort wins available.
+
+### Protect the cache: avoid cache-busting changes mid-thread
+
+In expensive long-running chats, treat cache stability as a hard constraint. The most common cache-busters are:
+
+- **Switching models mid-thread** (for example, moving from one Claude/GPT tier to another)
+- **Enabling or disabling MCP servers mid-thread** (tool definitions sit near the top of context; changing them invalidates large prefixes)
+- **Switching agent/profile mode mid-thread** (default agent ↔ custom agent, or one custom agent ↔ another)
+
+Practical rule: keep this tuple fixed for the whole long thread:
+
+```text
+{ model, active MCP set, active agent/profile }
+```
+
+If you need to change any item in that tuple, start a fresh conversation with a compact handoff summary instead of changing it in place.
+
+### Safe handoff pattern when a switch is required
+
+1. Summarize current thread in 5-10 bullets (decisions, constraints, open tasks).
+2. Start a new chat with the new model/agent/MCP setup.
+3. Paste only the summary + required files, not the entire old transcript.
+
+This preserves cache efficiency in the original thread and prevents dragging stale context into a new cost lane.
 
 ## 2.3.6 Start Fresh Conversations
 
