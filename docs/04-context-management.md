@@ -178,6 +178,31 @@ You can lean into this. Two practical patterns:
 
 Caching gains are real and dual-purpose: **it's faster** (cached prefixes skip re-encoding) **and cheaper** (most platforms bill cached input tokens at a fraction of the standard rate). Designing your context layout for cache stability is one of the lowest-effort wins available.
 
+```text
+Cache-stable long thread
+
+Turn 1     Turn 2     Turn 3     Turn 4
+|          |          |          |
+v          v          v          v
+[same model + same MCP set + same agent/profile]
+[stable prompt prefix reused from cache          ]  -> lower effective input cost
+[only newest user request changes               ]
+
+Cache-busted long thread
+
+Turn 1     Turn 2        Turn 3
+|          |             |
+v          v             v
+[model A + MCP set A + agent A]
+[cached prefix builds         ]
+                  |
+                  v
+          switch model / MCP / agent
+                  |
+                  v
+[large prefix invalidated or repriced] -> cache discount lost; start fresh instead
+```
+
 ### Protect the cache: avoid cache-busting changes mid-thread
 
 In expensive long-running chats, treat cache stability as a hard constraint. The most common cache-busters are:
