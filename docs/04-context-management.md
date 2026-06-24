@@ -168,15 +168,9 @@ Most teams have it inverted — everything in always-on. Flipping the ratio cuts
 
 The cheapest token is the one the platform doesn't have to re-process. Modern Copilot interactions cache stable portions of context (system prompt, instruction files, recently-loaded files) so they don't pay the full input-token cost on every turn.
 
-<<<<<<< HEAD
 In long sessions, this is often the biggest single cost lever. When most of your input is cache-hit input, effective input cost can drop dramatically (commonly cited as up to ~90% discount on cached input, depending on provider/model/surface billing rules).
 
 You can lean into this. Two practical patterns:
-||||||| parent of 68607d7 (Enhance documentation on `/chronicle` commands for token optimization and add VS Code settings for improved UI customization)
-You can lean into this. Two practical patterns:
-=======
-You can lean into this. Three practical patterns:
->>>>>>> 68607d7 (Enhance documentation on `/chronicle` commands for token optimization and add VS Code settings for improved UI customization)
 
 **1. Stable instructions at the top, volatile work at the bottom.** Cached context only works if the prefix of your conversation is stable. Don't reshuffle your `copilot-instructions.md` or rotate which files are open between every prompt — keep the stable layer stable, and let only the most recent message change.
 
