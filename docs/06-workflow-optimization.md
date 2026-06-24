@@ -204,21 +204,32 @@ A well-designed terse prompt template or agent profile can handle this automatic
 
 Token waste isn't only in any one prompt — it's in the **patterns** you don't notice. The same misread intent costing 5K extra tokens per session, every session. Copilot ships a built-in feedback loop for this: the [`/chronicle`](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/chronicle) slash command analyzes your local session history and tells you where Copilot got confused, where you went in circles, and how to fix it.
 
-> **Scope:** Full `/chronicle` (all subcommands) is available in **Copilot CLI** interactive sessions, backed by local session history in `~/.copilot/session-state/`. The `tips` subcommand is also available in **VS Code** as `/chronicle:tips`.
+> **Scope:** `/chronicle` is a **Copilot CLI** feature, backed by local session history in `~/.copilot/session-state/`. It runs in Copilot CLI interactive sessions — and inside **JetBrains IDEs** via interactive Copilot CLI sessions. It is **not** available in **VS Code**; for VS Code usage analytics, see [AI Engineering Coach](#258-vs-code-usage-analytics-ai-engineering-coach) below.
 >
 > **Availability:** `/chronicle` is currently experimental. Enable it with `/experimental on` in an interactive Copilot CLI session, or pass `--experimental` on the command line.
 
-Three subcommands, ranked by token-saving impact:
+The full subcommand set is `standup`, `tips`, `cost tips`, `search`, `improve`, and `reindex`. The three with the most token-saving impact:
 
 | Command | What it does | Token-saving payoff |
 |---------|--------------|---------------------|
-| **`/chronicle improve`** | Scans session history for back-and-forth, misunderstood intent, and repeated corrections — then **generates custom-instruction snippets** to prevent the pattern next time | Highest. Cuts off recurring waste at the source. Each fix compounds across every future session in that repo. |
-| **`/chronicle tips`** (CLI) / **`/chronicle:tips`** (VS Code) | Personalized coaching based on how you actually use Copilot — surfaces features and workflow improvements you're missing | Medium. Often suggests Ask Mode, model routing, or context scoping changes worth real tokens. |
+| **`/chronicle cost tips`** | Analyzes your token spend across recent sessions — prompt length, tool-call frequency, continuation steps — and suggests concrete ways to cut cost | Highest, and the most on-topic for this guide. Targets token spend directly. |
+| **`/chronicle improve`** | Scans session history for back-and-forth, misunderstood intent, and repeated corrections — then **generates custom-instruction snippets** to prevent the pattern next time | High. Cuts off recurring waste at the source. Each fix compounds across every future session in that repo. |
+| **`/chronicle tips`** | Personalized coaching based on how you actually use Copilot — surfaces features and workflow improvements you're missing | Medium. Often suggests Ask Mode, model routing, or context scoping changes worth real tokens. |
 | **`/chronicle standup`** | Generates a standup summary from your session data (branches, PRs, status) | Indirect — saves the 10 minutes you'd spend reconstructing yesterday, not direct token spend. |
+
+### The `cost tips` workflow
+
+The most direct fit for this guide. Run it weekly to see where your tokens actually go.
+
+```text
+/chronicle cost tips
+```
+
+Copilot CLI analyzes your token usage across recent sessions — looking at patterns like prompt length, tool-call frequency, and continuation steps — and surfaces specific, usage-grounded ways to reduce spend. Unlike generic advice, these recommendations are tied to your real session data, so they tend to point at the few habits costing you the most.
 
 ### The `improve` workflow
 
-This is the one that matters for token optimization. Run it weekly, or any time you catch yourself thinking *"why does it keep getting this wrong?"*
+This is the one that generates lasting fixes. Run it weekly, or any time you catch yourself thinking *"why does it keep getting this wrong?"*
 
 ```text
 /chronicle improve
@@ -230,21 +241,17 @@ Copilot CLI reads your recent CLI sessions, identifies recurring confusion (e.g.
 
 ### The `tips` workflow
 
-Run every week or two. Command varies by surface:
+Run every week or two:
 
 ```text
-# Copilot CLI
 /chronicle tips
-
-# VS Code
-/chronicle:tips
 ```
 
 Treat the suggestions like a code review — not all are worth adopting, but the ones that match your actual workflow are usually high-ROI. Common tips that overlap with this guide: switching to Ask Mode for explanation requests, scoping instruction files with `applyTo`, disabling unused MCP servers.
 
 ### Where this fits in the workflow
 
-- **Weekly:** `/chronicle tips` (CLI) or `/chronicle:tips` (VS Code) — catch missed habits.
+- **Weekly:** `/chronicle cost tips` — see where tokens go, and `/chronicle tips` — catch missed habits.
 - **When something feels repetitive:** `/chronicle improve` — turn the friction into a one-time fix.
 - **Daily standup (optional):** `/chronicle standup last 24 hours` — for the human ritual, not for tokens.
 
@@ -277,6 +284,23 @@ code --install-extension ai-engineer-coach-*.vsix
 Then `Cmd+Shift+P` → **AI Engineer Coach: Open Dashboard**.
 
 **How it complements `/chronicle`:** `/chronicle` acts on CLI session history to generate instruction fixes. AI Engineering Coach acts on VS Code session history to score your practice and flag structural issues (context bloat, unused MCPs, instruction-file gaps). Use both: chronicle to patch recurring prompt failures; AI Engineering Coach to audit the broader VS Code setup and track trend lines.
+
+## 2.5.9 Plan First, Then Execute (and Route the Phases)
+
+The most expensive tokens are the ones spent reaching a *wrong* outcome: an agent that codes for twenty steps in the wrong direction, then gets unwound and redone. Separating **planning** from **execution** is one of the highest-leverage habits for cutting that waste.
+
+**The two-phase pattern:**
+
+1. **Plan in plan mode (or Ask mode) first.** Use Copilot CLI's plan mode (or VS Code Ask mode) to think through the approach *before* any code is written — files to touch, order of changes, edge cases, acceptance criteria. Planning is cheap: it's mostly reasoning, no large diffs, no repeated tool loops. This is where a stronger model earns its cost, because a good plan prevents expensive rework downstream.
+2. **Save the plan, then execute it.** Write the agreed plan to a file (e.g. `plan.md`) or a tracked issue, then start a **fresh session** and prompt the execution against that saved plan. A clean session keeps the cacheable prefix stable (see [Caching §2.3.5](04-context-management.md#235-caching-store-and-reuse-context-within-prompts)) and avoids dragging the whole planning conversation forward as input tokens on every execution turn.
+
+**Why this saves tokens:**
+
+- **Fewer wasted steps.** A concrete, pre-agreed plan means the agent doesn't explore, guess requirements, or backtrack. Each avoided agent step is one full context reload saved (see [Minimizing Agent Steps §4.5.3](10-practical-setup.md#453-minimizing-agent-steps)).
+- **Cheaper execution lane.** Once the hard thinking is done and captured as explicit steps, execution is often mechanical — a cheaper model (Auto or an included model) can carry it out. Reserve the premium model for the planning phase where reasoning quality moves the outcome. See [Model Routing §4.5](10-practical-setup.md#step-5-mix-models-by-task-model-routing).
+- **A clean execution context.** Starting execution from a saved plan, rather than a long plan-then-build mega-session, keeps history short and the prefix cache-friendly — input cost per turn stays low.
+
+**Rule of thumb:** plan with the strong model, execute with the cheap one, and put the plan on disk in between. The outcome is reached in fewer total tokens *and* is usually higher quality, because the plan was reviewed before a single line was written.
 
 ---
 

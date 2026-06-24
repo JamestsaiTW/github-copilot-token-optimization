@@ -72,5 +72,5 @@ Practical guide to reducing GitHub Copilot token spend while keeping answers and
 
 ## Notes
 
-- `/chronicle` (full, all subcommands) is **Copilot CLI**. `/chronicle:tips` is also available in **VS Code**.
+- `/chronicle` is **Copilot CLI** only (also available inside JetBrains via interactive Copilot CLI sessions). It is **not** available in VS Code — use [AI Engineering Coach](06-workflow-optimization.md#258-vs-code-usage-analytics-ai-engineering-coach) there. Subcommands include `cost tips`, `improve`, `tips`, `standup`, `search`, and `reindex`.
 - Usage-Based Billing is labeled **UBB** in this repo.

@@ -123,8 +123,13 @@ This is especially relevant when comparing a cheap reasoning-capable model at `m
 
 - Leaving an expensive premium model pinned for the whole session
 - Changing models mid-chat in a long session without thinking about accumulated context. Prior messages, tool results, and cacheable prefixes can still be part of the next request; switching into a higher-cost lane can make that carried context more expensive than starting fresh
+<<<<<<< HEAD
 - Enabling/disabling MCP servers mid-thread in long sessions. Tool-surface changes often invalidate stable cached prefixes
 - Switching default/custom agent profiles mid-thread during expensive runs. Agent/profile changes can break cache continuity for the same conversation
+||||||| parent of 68607d7 (Enhance documentation on `/chronicle` commands for token optimization and add VS Code settings for improved UI customization)
+=======
+- Switching the **custom agent** or toggling **MCP servers / tools** mid-session. Like a model switch, this rewrites the cacheable prefix (system prompt, tool definitions, instructions), so cache savings are forfeited and prior context becomes pollution under the new setup. See [Caching §2.3.5](04-context-management.md#235-caching-store-and-reuse-context-within-prompts)
+>>>>>>> 68607d7 (Enhance documentation on `/chronicle` commands for token optimization and add VS Code settings for improved UI customization)
 - Assuming Auto will escalate to Opus when a task gets hard
 - Using vendor API prices and Copilot pricing signals as if they were the same metric
 - Recommending a model without checking whether the plan includes it

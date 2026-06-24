@@ -168,13 +168,30 @@ Most teams have it inverted — everything in always-on. Flipping the ratio cuts
 
 The cheapest token is the one the platform doesn't have to re-process. Modern Copilot interactions cache stable portions of context (system prompt, instruction files, recently-loaded files) so they don't pay the full input-token cost on every turn.
 
+<<<<<<< HEAD
 In long sessions, this is often the biggest single cost lever. When most of your input is cache-hit input, effective input cost can drop dramatically (commonly cited as up to ~90% discount on cached input, depending on provider/model/surface billing rules).
 
 You can lean into this. Two practical patterns:
+||||||| parent of 68607d7 (Enhance documentation on `/chronicle` commands for token optimization and add VS Code settings for improved UI customization)
+You can lean into this. Two practical patterns:
+=======
+You can lean into this. Three practical patterns:
+>>>>>>> 68607d7 (Enhance documentation on `/chronicle` commands for token optimization and add VS Code settings for improved UI customization)
 
 **1. Stable instructions at the top, volatile work at the bottom.** Cached context only works if the prefix of your conversation is stable. Don't reshuffle your `copilot-instructions.md` or rotate which files are open between every prompt — keep the stable layer stable, and let only the most recent message change.
 
 **2. Reuse named context via slash commands and saved snippets.** When you frequently ask about the same domain, define it once and reference it. For example: keep a short customers-schema note or slash-command snippet, load it once for the session, then keep follow-up prompts anchored to that shared summary instead of re-pasting the schema every time.
+
+**3. Don't churn the cacheable prefix mid-session.** The cached prefix is the *front* of every request — system prompt, tool/MCP definitions, and instruction files (the always-loaded `System/Tools` baseline; see [MCP & Tool Costs §2.7](08-mcp-tool-costs.md)). Changing any of it mid-conversation forces a full re-encode and forfeits the savings:
+
+| Mid-session change | Effect on cache & context |
+|--------------------|---------------------------|
+| **Switch model** | Worst case. Caches are typically per-model, so the cached prefix is effectively gone — and the carried history gets re-priced in the new (often costlier) lane. Pick the model before the work starts; see [Model-switch rule](11-models-and-pricing.md#anti-patterns). |
+| **Switch custom agent** | Swaps the system prompt, tool set, and instructions — the prefix changes, so the cache is invalidated and the prior accumulated context becomes pollution under the new agent. |
+| **Toggle MCP servers / tools** | Changes the tool-definitions block in the prefix — cache invalidated, plus you add or remove always-loaded tokens on every later turn. |
+| **Churn large context** | Attaching/detaching big files or pasting large blobs reshuffles context and undercuts prefix stability. Choose your files and context up front. |
+
+The pattern: **decide model, agent, and tool set before you start; if you genuinely need a different one, start a fresh session** with only the relevant summary and files rather than mutating a long one. (Billing implementation varies by surface and plan, so treat this as risk control rather than guaranteed repricing math.)
 
 Caching gains are real and dual-purpose: **it's faster** (cached prefixes skip re-encoding) **and cheaper** (most platforms bill cached input tokens at a fraction of the standard rate). Designing your context layout for cache stability is one of the lowest-effort wins available.
 

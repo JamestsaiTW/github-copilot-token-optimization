@@ -32,6 +32,8 @@ Buffer:        40.4k (20%)
 
 Skills stored in `.copilot/skills/` — even hundreds of kilobytes on disk — contribute **zero** to the `System/Tools` baseline. Optimizing skills improves individual agent spawn speed, not context headroom. MCP plugins and instruction files are the levers that move the `System/Tools` number.
 
+> **Set this baseline before you start — don't change it mid-session.** Because `System/Tools` sits at the front of every request, it's also the cacheable prefix. Toggling MCP servers/tools or switching the custom agent mid-conversation rewrites that prefix, forfeits the cached savings, and leaves prior context as pollution under the new tool set. Choose your MCP/tool and agent set up front; if you genuinely need a different one, start a fresh session. See [Caching §2.3.5](04-context-management.md#235-caching-store-and-reuse-context-within-prompts).
+
 > Dina Berry (Microsoft/GitHub content contributor) measured a real Copilot CLI production setup and found a single Azure plugin loading ~27K tokens per message — invisible until she ran `/context`. [Full writeup →](https://dfberry.github.io/2026-05-06-tuning-up-copilot-context)
 
 ---
